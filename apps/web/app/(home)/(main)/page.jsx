@@ -18,7 +18,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center py-20 text-center">
       <h1 className="pb-10 text-4xl font-bold">
-        Welcome to Supporty Beta, No 🐮💩 Customer chat
+        Welcome to Supporty Beta, <br />No 🐮💩 Customer chat
       </h1>
       <p className="py-4">
         “A customer is asking questions on Intercom/Zendesk, someone respond.🤨”
