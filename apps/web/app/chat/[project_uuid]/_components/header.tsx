@@ -19,11 +19,11 @@ export default function Header({
       <div className="flex-1" />
       <div className="flex-1 text-center text-sm text-gray-300">
         {operating_hours != null ? (
-          <span>
-            Operating Hours
+          <>
+            <span className="text-xs">Operating Hours</span>
             <br />
             {operating_hours.open} - {operating_hours.close}
-          </span>
+          </>
         ) : (
           <span>Available 24/7</span>
         )}
