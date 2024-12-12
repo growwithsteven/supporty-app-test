@@ -72,7 +72,9 @@ export function ContactReq({ type, payload, created_at, onSubmit }: Props) {
           Save{saved && "d"}
         </button>
         <p className="text-xs text-gray-300">
-          Enter more than 1 contact information
+          {saved
+            ? "We will contact you soon :)"
+            : "Enter more than 1 contact information"}
         </p>
       </form>
     </div>

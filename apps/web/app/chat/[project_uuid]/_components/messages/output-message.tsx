@@ -35,9 +35,21 @@ OutputMessage.System = function SystemMessage({
 }) {
   const [displayedIndex, setDisplayedIndex] = useState(0);
 
-  const animateEnabled =
-    realTime && typeof children === "string" && showFollowUp;
-  const animateFinished = displayedIndex === children.length;
+  const trimedChildren = children.trim();
+
+  const animateEnabled = realTime && showFollowUp;
+  const animateFinished = displayedIndex === trimedChildren.length;
+
+  const isFollowUpVisible = animateFinished || !animateEnabled;
+
+  if (showFollowUp) {
+    console.log(
+      animateEnabled,
+      animateFinished,
+      displayedIndex,
+      trimedChildren,
+    );
+  }
 
   useEffect(() => {
     async function animate(result: string) {
@@ -48,21 +60,21 @@ OutputMessage.System = function SystemMessage({
     }
 
     if (animateEnabled) {
-      animate(String(children).trim());
+      animate(trimedChildren);
     }
-  }, [children, animateEnabled]);
+  }, [trimedChildren, animateEnabled]);
 
   const renderProps: HTMLAttributes<HTMLDivElement> = useMemo(() => {
     if (!animateEnabled) {
-      return { children };
+      return { children: trimedChildren };
     }
 
     return {
       dangerouslySetInnerHTML: {
-        __html: `${children.slice(0, displayedIndex)}<span class="opacity-0">${children.slice(displayedIndex)}</span>`,
+        __html: `${trimedChildren.slice(0, displayedIndex)}<span class="opacity-0">${children.slice(displayedIndex)}</span>`,
       },
     };
-  }, [children, animateEnabled, displayedIndex]);
+  }, [trimedChildren, animateEnabled, displayedIndex]);
 
   return (
     <>
@@ -73,7 +85,7 @@ OutputMessage.System = function SystemMessage({
         <div
           className={cn(
             "transition-opacity duration-300 ease-in",
-            animateFinished || !animateEnabled ? "opacity-100" : "opacity-0",
+            isFollowUpVisible ? "opacity-100" : "opacity-0",
           )}
         >
           {followUp}

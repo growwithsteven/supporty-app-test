@@ -140,7 +140,8 @@ export function useChat(projectUuid: Project["uuid"]) {
 
   const handleSend = (text: string) => {
     const isFirstChatMessage =
-      messages.data.filter((x) => x.type === "default").length === 0;
+      messages.data.filter((x) => x.type === "default" && x.sender === "user")
+        .length === 0;
 
     const params = { text, type: "default" } as const;
 
@@ -148,11 +149,14 @@ export function useChat(projectUuid: Project["uuid"]) {
     _saveUserMessage(params);
 
     if (isFirstChatMessage) {
-      _saveSystemMessage({
-        text: "contact_req",
-        type: "contact_req",
-        payload: { phoneNumber: "", email: "" },
-      });
+      setIsTyping(true);
+      setTimeout(() => {
+        _saveSystemMessage({
+          text: "contact_req",
+          type: "contact_req",
+          payload: { phoneNumber: "", email: "" },
+        });
+      }, 1000);
     }
   };
 
@@ -168,13 +172,13 @@ export function useChat(projectUuid: Project["uuid"]) {
 
     setIsTyping(true);
     setTimeout(() => {
-      _saveSystemMessage(params);
+      _saveSystemMessage({ text: faq.answer, type: "faq" });
     }, 1500);
   };
 
   const handleContactReqSubmit = (payload: ContactReqPayload) => {
     _saveUserMessage({
-      text: `[Contact Info Submitted] - ${payload.phoneNumber} - ${payload.email}`,
+      text: `[Contact Info Submitted] - ${payload.phoneNumber} / ${payload.email}`,
       type: "contact_res",
     });
     _submitContactInfo(payload);

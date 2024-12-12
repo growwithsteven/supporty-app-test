@@ -19,7 +19,7 @@ export function useUserAuth() {
     const supabase = createSupabaseUser();
     const {
       data: { user: _user },
-    } = await supabase.auth.updateUser(attr);
+    } = await supabase.auth.updateUser({ data: attr });
 
     assert(_user != null, "User update failed");
 

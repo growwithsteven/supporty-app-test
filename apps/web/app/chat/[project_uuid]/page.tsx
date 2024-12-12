@@ -14,7 +14,7 @@ import { LoadingDots } from "./_components/LoadingDots";
 import { StoredMessage } from "./_hooks/useMessages";
 import { useUserAuth } from "./_hooks/user-auth";
 import { ContactReq } from "./_components/messages/system/ContactReq";
-import { MessageType } from "@/types/message";
+import { MessageSender, MessageType } from "@/types/message";
 import { last } from "es-toolkit";
 
 export default function Chat() {
@@ -43,47 +43,49 @@ export default function Chat() {
   }, [messages]);
 
   const renderMessage = (message: StoredMessage, index: number) => {
-    switch (message.sender) {
-      case "user":
-        return (
-          <InputMessage key={index} sendAt={new Date(message.created_at)}>
-            {message.text}
-          </InputMessage>
-        );
-      case "project":
-        message.text = message.text + " ";
-
-        if (message.type === MessageType.contact_req) {
-          return (
-            <ContactReq
-              key={index}
-              {...message}
-              onSubmit={handleContactReqSubmit}
-            />
-          );
-        }
-
-        const showFollowUp =
-          messages.findLastIndex(
-            (x) => x.type === MessageType.default && x.sender === "project",
-          ) === index;
-
-        return (
-          <OutputMessage.System
-            key={index}
-            sendAt={new Date(message.created_at)}
-            realTime={message.realTimeReceived}
-            showFollowUp={showFollowUp}
-            followUp={
-              settings != null && (
-                <FaqList faq={settings.faq} onSelect={handleFaqSelect} />
-              )
-            }
-          >
-            {message.text}
-          </OutputMessage.System>
-        );
+    if (message.sender === MessageSender.user) {
+      return (
+        <InputMessage
+          key={message.created_at}
+          sendAt={new Date(message.created_at)}
+        >
+          {message.text}
+        </InputMessage>
+      );
     }
+
+    if (message.type === MessageType.contact_req) {
+      return (
+        <ContactReq
+          key={message.created_at}
+          {...message}
+          onSubmit={handleContactReqSubmit}
+        />
+      );
+    }
+
+    const showFollowUp =
+      messages.findLastIndex(
+        (x) =>
+          x.type !== MessageType.contact_req &&
+          x.sender === MessageSender.project,
+      ) === index;
+
+    return (
+      <OutputMessage.System
+        key={message.created_at}
+        sendAt={new Date(message.created_at)}
+        realTime={message.realTimeReceived}
+        showFollowUp={showFollowUp}
+        followUp={
+          settings != null && (
+            <FaqList faq={settings.faq} onSelect={handleFaqSelect} />
+          )
+        }
+      >
+        {message.text}
+      </OutputMessage.System>
+    );
   };
 
   return (
