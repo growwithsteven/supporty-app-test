@@ -1,25 +1,32 @@
 'use client'
 
-import { useProjectAuth } from '@/hooks/project-auth'
+import * as projectApi from '@/lib/project-api'
+
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { useLayoutEffect } from 'react'
 
 export default function Test() {
-  const { getProject, authState } = useProjectAuth()
   const searchParams = useSearchParams()
   const router = useRouter()
 
-  useEffect(() => {
-    if (searchParams.get('project_uuid')) {
-      getProject(searchParams.get('project_uuid') as string)
+  useLayoutEffect(() => {
+    const projectUuid = searchParams.get('project_uuid')
+
+    if (projectUuid) {
+      ;(async function () {
+        const {
+          data: { projectDetails: project, token },
+        } = await projectApi.getProject(projectUuid)
+
+        if (project.project_uuid === projectUuid) {
+          localStorage.setItem('project', JSON.stringify(project))
+          localStorage.setItem('project-token', token!)
+
+          router.push('/dashboard')
+        }
+      })()
     }
   }, [searchParams])
-
-  useEffect(() => {
-    if (authState) {
-      router.push('/dashboard')
-    }
-  }, [authState])
 
   return <div>Test</div>
 }

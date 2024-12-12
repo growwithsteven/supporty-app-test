@@ -6,13 +6,18 @@ import { createSupabase } from '@/lib/supabase'
 import toast from 'react-hot-toast'
 import { updateProjectSettings } from '@/lib/project-api'
 import { useProjectAuth } from '@/hooks/project-auth'
-import { Project, ProjectSettings } from '@/types/project'
+import { Faq, Project, ProjectSettings } from '@/types/project'
 import TimePicker from '@/app/(home)/(app)/_components/TimePicker'
+import { xor } from '@/lib/xor'
+import { FaqSection } from './_components/FaqSection'
 
 export default function Settings() {
   const { authState, project } = useProjectAuth()
   const [settings, setSettings] = useState<ProjectSettings | null>(null)
 
+  const [welcomeMessage, setWelcomeMessage] = useState<string>(
+    project?.settings?.welcomeMessage || '',
+  )
   const [openTime, setOpenTime] = useState<string | null>(
     project?.settings?.operating_hours?.open || null,
   )
@@ -20,18 +25,21 @@ export default function Settings() {
     project?.settings?.operating_hours?.close || null,
   )
 
+  const [faq, setFaq] = useState<Faq[]>(project?.settings?.faq || [])
+
   const saveable = useMemo(() => {
-    if (!settings) {
-      return false
-    }
+    // if (!settings) {
+    //   return false
+    // }
 
     return (
-      settings.welcomeMessage !== (project?.settings?.welcomeMessage ?? '') ||
-      settings.faq !== project?.settings?.faq ||
-      settings.operating_hours?.open !==
+      settings?.welcomeMessage !== (project?.settings?.welcomeMessage ?? '') ||
+      settings?.faq !== project?.settings?.faq ||
+      settings?.operating_hours?.open !==
         project?.settings?.operating_hours?.open ||
-      settings.operating_hours?.close !==
-        project?.settings?.operating_hours?.close
+      settings?.operating_hours?.close !==
+        project?.settings?.operating_hours?.close ||
+      JSON.stringify(faq) !== JSON.stringify(project?.settings?.faq)
     )
   }, [settings])
 
@@ -60,15 +68,18 @@ export default function Settings() {
   }, [project])
 
   const handleSave = async () => {
-    if (!openTime || !closeTime) {
+    if (xor(!!openTime, !!closeTime)) {
       toast.error('Both Open Time and Close Time must be provided!')
       return
     }
 
     toast.success('Settings saved!')
+
     await updateProjectSettings({
-      ...settings,
-      operating_hours: { open: openTime, close: closeTime },
+      welcomeMessage,
+      operating_hours:
+        openTime && closeTime ? { open: openTime, close: closeTime } : null,
+      faq,
     })
   }
 
@@ -92,10 +103,10 @@ export default function Settings() {
           <textarea
             className="textarea textarea-bordered h-20"
             placeholder="Welcome to chat!"
-            value={settings?.welcomeMessage}
-            onChange={(e) =>
-              setSettings({ ...settings, welcomeMessage: e.target.value })
-            }
+            value={welcomeMessage}
+            onChange={(e) => {
+              setWelcomeMessage(e.target.value)
+            }}
           />
         </label>
 
@@ -119,17 +130,15 @@ export default function Settings() {
 
         <div className="divider"></div>
 
-        <label className="form-control">
+        <div className="form-control">
           <div className="label">
             <span className="label-text">FAQ</span>
           </div>
-          <textarea
-            className="textarea textarea-bordered h-20"
-            placeholder="Enter your FAQ here..."
-            value={settings?.faq}
-            onChange={(e) => setSettings({ ...settings, faq: e.target.value })}
+          <FaqSection
+            value={faq}
+            onChange={setFaq}
           />
-        </label>
+        </div>
       </div>
     )
   )

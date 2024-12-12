@@ -13,10 +13,17 @@ export interface Project {
 
 export interface ProjectSettings {
   welcomeMessage?: string
-  faq?: string
+  faq: Faq[]
 
   operating_hours?: {
     open: string
     close: string
   }
+}
+
+export interface Faq {
+  id: string
+
+  question: string
+  answer: string
 }
