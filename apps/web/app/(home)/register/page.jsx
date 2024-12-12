@@ -22,8 +22,9 @@ function RegisterComponent() {
       .then(() => {
         router.push('/dashboard')
       })
-      .catch(() => {
+      .catch((err) => {
         router.push('/')
+        throw err
       })
   }, [code])
 

@@ -22,3 +22,7 @@ export async function slackRegister(code) {
 export async function updateProjectSettings(settings) {
   return client.put(`/project/settings`, settings)
 }
+
+export async function getProject(projectUuid) {
+  return client.get(`/project?project_uuid=${projectUuid}`)
+}
