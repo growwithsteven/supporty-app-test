@@ -31,6 +31,12 @@ export default function Chat() {
     }
   }
 
+  const renderFaqMessage = () => {
+    if (settings?.faq) {
+      return <OutputMessage>{settings.faq}</OutputMessage>
+    }
+  }
+
   const renderMessage = (message, index) => {
     switch (message.sender) {
       case 'user':
@@ -53,6 +59,7 @@ export default function Chat() {
       >
         <div className="flex flex-col gap-2 px-4 pb-4">
           {renderWelcomeMessage()}
+          {renderFaqMessage()}
           {messages.map(renderMessage)}
         </div>
       </div>
