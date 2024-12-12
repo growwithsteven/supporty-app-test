@@ -14,16 +14,16 @@ export default function Header({
     }
   }
 
-  const formatOperatingHours = (hours: { open: string; close: string }) => {
-    return `Operating Hours: ${hours.open} - ${hours.close}`
-  }
-
   return (
     <div className="flex w-full items-center justify-between p-4">
       <div className="flex-1" />
       <div className="flex-1 text-center text-sm text-gray-300">
         {operating_hours != null ? (
-          <span>{formatOperatingHours(operating_hours)}</span>
+          <span>
+            Operating Hours
+            <br />
+            {operating_hours.open} - {operating_hours.close}
+          </span>
         ) : (
           <span>Available 24/7</span>
         )}
