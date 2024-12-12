@@ -43,7 +43,10 @@ export default function Chat() {
   return (
     <div className="flex h-screen flex-col text-base">
       {loading && <Loading />}
-      <Header onDisableChat={handleDisableChat} />
+      <Header
+        operating_hours={settings?.operating_hours}
+        onDisableChat={handleDisableChat}
+      />
       <div
         className="flex-1 overflow-y-auto"
         ref={scrollRef}
