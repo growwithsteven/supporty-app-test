@@ -12,7 +12,8 @@ export interface Project {
 }
 
 export interface ProjectSettings {
-  welcomeMessage: string
+  welcomeMessage?: string
+  faq?: string
 
   operating_hours?: {
     open: string

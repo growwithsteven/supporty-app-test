@@ -26,7 +26,8 @@ export default function Settings() {
     }
 
     return (
-      settings.welcomeMessage !== project?.settings?.welcomeMessage ||
+      settings.welcomeMessage !== (project?.settings?.welcomeMessage ?? '') ||
+      settings.faq !== project?.settings?.faq ||
       settings.operating_hours?.open !==
         project?.settings?.operating_hours?.open ||
       settings.operating_hours?.close !==
@@ -74,6 +75,16 @@ export default function Settings() {
   return (
     authState && (
       <div className="flex w-full flex-col gap-4">
+        <div className="flex w-full justify-end">
+          <button
+            className="btn btn-primary"
+            disabled={!saveable}
+            onClick={handleSave}
+          >
+            Save
+          </button>
+        </div>
+
         <label className="form-control">
           <div className="label">
             <span className="label-text">Welcome message</span>
@@ -85,9 +96,11 @@ export default function Settings() {
             onChange={(e) =>
               setSettings({ ...settings, welcomeMessage: e.target.value })
             }
-          ></textarea>
+          />
         </label>
+
         <div className="divider"></div>
+
         <label className="form-control">
           <div className="label">
             <span className="label-text">Operating hours</span>
@@ -103,15 +116,20 @@ export default function Settings() {
             onChange={setCloseTime}
           />
         </label>
-        <div className="flex w-full justify-end">
-          <button
-            className="btn btn-primary"
-            disabled={!saveable}
-            onClick={handleSave}
-          >
-            Save
-          </button>
-        </div>
+
+        <div className="divider"></div>
+
+        <label className="form-control">
+          <div className="label">
+            <span className="label-text">FAQ</span>
+          </div>
+          <textarea
+            className="textarea textarea-bordered h-20"
+            placeholder="Enter your FAQ here..."
+            value={settings?.faq}
+            onChange={(e) => setSettings({ ...settings, faq: e.target.value })}
+          />
+        </label>
       </div>
     )
   )
