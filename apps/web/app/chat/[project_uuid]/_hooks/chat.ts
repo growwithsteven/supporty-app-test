@@ -5,14 +5,23 @@ import toast from 'react-hot-toast'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { useUserAuth } from './user-auth'
+import { Project, ProjectSettings } from '@/types/project'
+import { Message } from '@/types/message'
+import { RealtimePostgresInsertPayload } from '@supabase/supabase-js'
 
-export function useChat(projectUuid) {
+export function useChat(projectUuid: Project['uuid']) {
   const [loading, setLoading] = useState(true)
-  const [settings, setSettings] = useState(null)
-  const [messages, setMessages] = useState([])
+  const [settings, setSettings] = useState<ProjectSettings | null>(null)
+  const [messages, setMessages] = useState<Pick<Message, 'sender' | 'text'>[]>(
+    [],
+  )
   const { user } = useUserAuth()
 
   const fetchMessages = async () => {
+    if (!user) {
+      return
+    }
+
     const supabase = createSupabaseUser()
 
     const { data: chat } = await supabase
@@ -29,7 +38,7 @@ export function useChat(projectUuid) {
         .eq('chat_id', chat.id)
         .order('id', { ascending: true })
 
-      setMessages(messages)
+      setMessages(messages || [])
     }
 
     setLoading(false)
@@ -63,7 +72,7 @@ export function useChat(projectUuid) {
           table: 'messages',
           filter: 'sender=eq.project',
         },
-        (payload) => {
+        (payload: RealtimePostgresInsertPayload<Message>) => {
           const message = payload.new
           if (message.project_uuid === projectUuid) {
             setMessages((prev) => [...prev, message])
@@ -80,7 +89,7 @@ export function useChat(projectUuid) {
     }
   }, [user])
 
-  const handleSend = (text) => {
+  const handleSend = (text: string) => {
     setMessages((prev) => [...prev, { sender: 'user', text }])
 
     api.sendMessage(projectUuid, text).catch(() => {

@@ -1,9 +1,10 @@
 import { createSupabaseUser } from '@/lib/supabase'
 import { useMount } from 'react-use'
 import { useState } from 'react'
+import { User } from '@supabase/supabase-js'
 
 export function useUserAuth() {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<Pick<User, 'id'> | null>(null)
 
   useMount(async () => {
     const supabase = createSupabaseUser()
@@ -23,7 +24,7 @@ export function useUserAuth() {
     }
 
     setUser({
-      id: user.id,
+      id: user!.id,
     })
   })
 
