@@ -1,23 +1,23 @@
-import { ProjectSettings } from '@/types/project'
-import { FaBars } from 'react-icons/fa6'
+import { ProjectSettings } from "@/types/project";
+import { FaBars } from "react-icons/fa6";
 
 export default function Header({
   operating_hours,
   onDisableChat,
-}: Pick<ProjectSettings, 'operating_hours'> & {
-  onDisableChat: () => void
+}: Pick<ProjectSettings, "operating_hours"> & {
+  onDisableChat: () => void;
 }) {
   const handleDropDownClick = () => {
-    const elem = document.activeElement as HTMLElement
+    const elem = document.activeElement as HTMLElement;
     if (elem) {
-      elem.blur()
+      elem.blur();
     }
-  }
+  };
 
   return (
     <div className="flex w-full items-center justify-between p-4">
       <div className="flex-1" />
-      <div className="flex-1 text-center text-sm text-gray-300">
+      <div className="flex-1 text-center text-sm text-gray-400">
         {operating_hours != null ? (
           <>
             <span className="text-xs">Operating Hours</span>
@@ -30,11 +30,7 @@ export default function Header({
       </div>
       <div className="flex flex-1 justify-end">
         <div className="dropdown dropdown-end">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle"
-          >
+          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
             <FaBars className="text-xl" />
           </div>
           <ul
@@ -44,8 +40,8 @@ export default function Header({
             <li>
               <button
                 onClick={() => {
-                  handleDropDownClick()
-                  onDisableChat()
+                  handleDropDownClick();
+                  onDisableChat();
                 }}
               >
                 Start a New Conversation
@@ -55,5 +51,5 @@ export default function Header({
         </div>
       </div>
     </div>
-  )
+  );
 }

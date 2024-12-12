@@ -4,21 +4,21 @@ export function LoadingDots() {
       <div
         className="animate-bigbounce animate-infinite size-2 rounded-full bg-gray-500"
         style={{
-          animationDelay: '0s',
+          animationDelay: "0s",
         }}
       ></div>
       <div
         className="animate-bigbounce size-2 rounded-full bg-gray-500"
         style={{
-          animationDelay: '0.1s',
+          animationDelay: "0.1s",
         }}
       ></div>
       <div
         className="animate-bigbounce size-2 rounded-full bg-gray-500"
         style={{
-          animationDelay: '0.2s',
+          animationDelay: "0.2s",
         }}
       ></div>
     </div>
-  )
+  );
 }

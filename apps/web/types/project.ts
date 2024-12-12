@@ -1,29 +1,29 @@
 export interface Project {
-  uuid: string
-  team_id: string
-  team_name: string
+  uuid: string;
+  team_id: string;
+  team_name: string;
 
-  access_token: string
-  channel_id: string
+  access_token: string;
+  channel_id: string;
 
-  settings?: ProjectSettings
+  settings?: ProjectSettings;
 
-  created_at: string
+  created_at: string;
 }
 
 export interface ProjectSettings {
-  welcomeMessage?: string
-  faq: Faq[]
+  welcomeMessage?: string;
+  faq: Faq[];
 
   operating_hours?: {
-    open: string
-    close: string
-  }
+    open: string;
+    close: string;
+  };
 }
 
 export interface Faq {
-  id: string
+  id: string;
 
-  question: string
-  answer: string
+  question: string;
+  answer: string;
 }
