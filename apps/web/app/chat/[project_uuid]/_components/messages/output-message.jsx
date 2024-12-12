@@ -1,9 +1,7 @@
-export default function InputMessage({ children }) {
+export default function OutputMessage({ children }) {
   return (
-    <div className="flex w-full pr-10">
-      <div className="bg-base-200 text-base-content whitespace-pre-wrap rounded-xl p-3">
-        {children}
-      </div>
+    <div className="chat chat-start">
+      <div className="chat-bubble bg-gray-300 text-gray-800">{children}</div>
     </div>
   )
 }

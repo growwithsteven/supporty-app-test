@@ -12,6 +12,7 @@
     "@supabase/supabase-js": "^2.47.5",
     "axios": "^1.7.9",
     "copy-to-clipboard": "^3.3.3",
+    "es-toolkit": "^1.29.0",
     "jsonwebtoken": "^9.0.2",
     "next": "15.0.2",
     "react": "19.0.0-rc-02c0e824-20241028",

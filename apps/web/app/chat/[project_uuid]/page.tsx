@@ -9,12 +9,23 @@ import Loading from './_components/loading'
 import OutputMessage from './_components/messages/output-message'
 import { useChat } from './_hooks/chat'
 import { useParams } from 'next/navigation'
+import { Message } from '@/types/message'
+import { FaqList } from './_components/messages/FaqList'
+import { LoadingDots } from './_components/LoadingDots'
+import { last } from 'es-toolkit'
 
 export default function Chat() {
   const { project_uuid: projectUuid } = useParams()
-  const { loading, settings, messages, handleSend, handleDisableChat } =
-    useChat(projectUuid)
-  const scrollRef = useRef(null)
+  const {
+    loading,
+    settings,
+    messages,
+    handleSend,
+    handleFaqSelect,
+    handleDisableChat,
+    isTyping,
+  } = useChat(projectUuid as string)
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
     if (scrollRef.current) {
@@ -31,13 +42,25 @@ export default function Chat() {
     }
   }
 
-  const renderFaqMessage = () => {
+  const renderFaqList = () => {
+    if (last(messages)?.sender === 'user') {
+      return null
+    }
+
     if (settings?.faq) {
-      return <OutputMessage>{settings.faq}</OutputMessage>
+      return (
+        <FaqList
+          faq={settings.faq}
+          onSelect={handleFaqSelect}
+        />
+      )
     }
   }
 
-  const renderMessage = (message, index) => {
+  const renderMessage = (
+    message: Pick<Message, 'sender' | 'text'>,
+    index: number,
+  ) => {
     switch (message.sender) {
       case 'user':
         return <InputMessage key={index}>{message.text}</InputMessage>
@@ -59,8 +82,13 @@ export default function Chat() {
       >
         <div className="flex flex-col gap-2 px-4 pb-4">
           {renderWelcomeMessage()}
-          {renderFaqMessage()}
           {messages.map(renderMessage)}
+          {renderFaqList()}
+          {isTyping && (
+            <OutputMessage>
+              <LoadingDots />
+            </OutputMessage>
+          )}
         </div>
       </div>
       <div className="px-4 pb-4">

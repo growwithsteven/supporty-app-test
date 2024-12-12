@@ -26,6 +26,13 @@ export async function sendMessage(projectUuid, text) {
   })
 }
 
+export async function saveSystemMessage(projectUuid, text) {
+  return client.post('/messages/system', {
+    projectUuid,
+    text,
+  })
+}
+
 export async function disableChat(projectUuid) {
   return client.post('/chats/disable', { projectUuid })
 }

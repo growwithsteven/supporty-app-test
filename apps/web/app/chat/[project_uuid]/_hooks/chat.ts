@@ -5,12 +5,15 @@ import toast from 'react-hot-toast'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { useUserAuth } from './user-auth'
-import { Project, ProjectSettings } from '@/types/project'
+import { Faq, Project, ProjectSettings } from '@/types/project'
 import { Message } from '@/types/message'
 import { RealtimePostgresInsertPayload } from '@supabase/supabase-js'
 
 export function useChat(projectUuid: Project['uuid']) {
   const [loading, setLoading] = useState(true)
+
+  const [isTyping, setIsTyping] = useState(false)
+
   const [settings, setSettings] = useState<ProjectSettings | null>(null)
   const [messages, setMessages] = useState<Pick<Message, 'sender' | 'text'>[]>(
     [],
@@ -89,12 +92,36 @@ export function useChat(projectUuid: Project['uuid']) {
     }
   }, [user])
 
+  useEffect(() => {
+    if (
+      messages.length > 0 &&
+      messages[messages.length - 1].sender === 'project'
+    ) {
+      setIsTyping(false)
+    }
+  }, [messages])
+
   const handleSend = (text: string) => {
     setMessages((prev) => [...prev, { sender: 'user', text }])
 
     api.sendMessage(projectUuid, text).catch(() => {
       toast.error('Failed to send message')
     })
+  }
+
+  const handleSendBySystem = (text: string) => {
+    api.saveSystemMessage(projectUuid, text).catch(() => {
+      console.error('Failed to save system message')
+    })
+  }
+
+  const handleFaqSelect = (faq: Faq) => {
+    handleSend(faq.question)
+
+    setIsTyping(true)
+    setTimeout(() => {
+      handleSendBySystem(faq.answer)
+    }, 2000)
   }
 
   const handleDisableChat = () => {
@@ -109,6 +136,8 @@ export function useChat(projectUuid: Project['uuid']) {
     settings,
     messages,
     handleSend,
+    handleFaqSelect,
     handleDisableChat,
+    isTyping,
   }
 }
