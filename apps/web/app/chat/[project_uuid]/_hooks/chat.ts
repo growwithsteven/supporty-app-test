@@ -120,7 +120,7 @@ export function useChat(projectUuid: Project["uuid"]) {
     setIsTyping(true);
     setTimeout(() => {
       handleSendBySystem(faq.answer);
-    }, 2000);
+    }, 1500);
   };
 
   const handleDisableChat = () => {
