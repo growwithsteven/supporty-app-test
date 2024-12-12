@@ -1,8 +1,10 @@
+import type { ValueOf } from './utils'
+
 export const MessageSender = {
   project: 'project',
   user: 'user',
 } as const
-export type MessageSender = (typeof MessageSender)[keyof typeof MessageSender]
+export type MessageSender = ValueOf<typeof MessageSender>
 
 export interface Message {
   id: number
@@ -10,5 +12,6 @@ export interface Message {
   project_uuid: string
   sender: MessageSender
   text: string
+  internalText: string | null
   created_at: string
 }

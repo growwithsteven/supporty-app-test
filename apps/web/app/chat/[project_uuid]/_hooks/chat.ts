@@ -101,22 +101,22 @@ export function useChat(projectUuid: Project['uuid']) {
     }
   }, [messages])
 
-  const handleSend = (text: string) => {
-    setMessages((prev) => [...prev, { sender: 'user', text }])
+  const handleSend = (text: string, internalText?: string) => {
+    setMessages((prev) => [...prev, { sender: 'user', text, internalText }])
 
-    api.sendMessage(projectUuid, text).catch(() => {
+    api.sendMessage({ projectUuid, text, internalText }).catch(() => {
       toast.error('Failed to send message')
     })
   }
 
   const handleSendBySystem = (text: string) => {
-    api.saveSystemMessage(projectUuid, text).catch(() => {
+    api.saveSystemMessage({ projectUuid, text }).catch(() => {
       console.error('Failed to save system message')
     })
   }
 
   const handleFaqSelect = (faq: Faq) => {
-    handleSend(faq.question)
+    handleSend(faq.question, `[FAQ clicked] - ${faq.question}`)
 
     setIsTyping(true)
     setTimeout(() => {
@@ -128,7 +128,7 @@ export function useChat(projectUuid: Project['uuid']) {
     toast.success('New Conversation Started')
     setMessages([])
 
-    api.disableChat(projectUuid).catch(() => {})
+    api.disableChat({ projectUuid }).catch(() => {})
   }
 
   return {

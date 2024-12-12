@@ -5,7 +5,7 @@ import { createSupabaseWithServiceRole } from '@/lib/supabase'
 import { verifyTokenFromAuthorization } from '@/lib/token'
 
 export async function POST(req) {
-  const { projectUuid, text } = await req.json()
+  const { projectUuid, text, internalText } = await req.json()
   const supabase = createSupabaseWithServiceRole()
   const { sub: userId } = await verifyTokenFromAuthorization(
     req.headers.get('Authorization'),
@@ -57,6 +57,7 @@ export async function POST(req) {
       project_uuid: projectUuid,
       sender: 'user',
       text,
+      internal_text: internalText,
     })
     .select('*')
     .single()
@@ -84,7 +85,7 @@ export async function POST(req) {
     accessToken: project.access_token,
     channel: project.channel_id,
     text: threadTs
-      ? message.text
+      ? (message.internal_text ?? message.text)
       : `New conversation from supporty: ${message.text}\nReply in the thread to send a message to the user.`,
     ...(threadTs && { thread_ts: threadTs }),
   })
