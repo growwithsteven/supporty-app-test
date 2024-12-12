@@ -1,19 +1,23 @@
-import { useEffect, useState, useMemo, HTMLAttributes } from "react";
+import {
+  useEffect,
+  useState,
+  useMemo,
+  HTMLAttributes,
+  ComponentProps,
+} from "react";
 import MessageBubble from "./MessageBubble";
 import { cn } from "@/lib/cn";
+import { OmitPropsOf } from "@/types/utils";
 
-export default function OutputMessage({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function OutputMessage(
+  props: OmitPropsOf<typeof MessageBubble, "bound" | "className">,
+) {
   return (
     <MessageBubble
+      {...props}
       bound="in"
       className="bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
-    >
-      {children}
-    </MessageBubble>
+    />
   );
 }
 
@@ -22,7 +26,8 @@ OutputMessage.System = function SystemMessage({
   realTime,
   last,
   followUp,
-}: {
+  sendAt,
+}: ComponentProps<typeof OutputMessage> & {
   children: string;
   realTime?: boolean;
   last?: boolean;
@@ -60,7 +65,7 @@ OutputMessage.System = function SystemMessage({
 
   return (
     <>
-      <OutputMessage>
+      <OutputMessage sendAt={sendAt}>
         <div {...renderProps} />
       </OutputMessage>
       {last && (

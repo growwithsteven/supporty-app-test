@@ -3,7 +3,10 @@ import { Nilable } from "@/types/utils";
 import { useState } from "react";
 import { useMemo } from "react";
 
-export type MessageForDisplay = Pick<Message, "sender" | "text"> & {
+export type MessageForDisplay = Pick<
+  Message,
+  "sender" | "text" | "created_at"
+> & {
   realTimeReceived?: true;
 };
 
@@ -17,12 +20,20 @@ export function useMessages() {
         setMessages(_messages ?? []);
       },
       addByUser(text: string) {
-        setMessages((prev) => [...prev, { sender: "user", text }]);
+        setMessages((prev) => [
+          ...prev,
+          { sender: "user", text, created_at: new Date().toISOString() },
+        ]);
       },
       addByProject(text: string) {
         setMessages((prev) => [
           ...prev,
-          { sender: "project", text, realTimeReceived: true },
+          {
+            sender: "project",
+            text,
+            realTimeReceived: true,
+            created_at: new Date().toISOString(),
+          },
         ]);
       },
     }),

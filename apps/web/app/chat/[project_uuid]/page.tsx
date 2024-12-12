@@ -44,11 +44,16 @@ export default function Chat() {
   const renderMessage = (message: MessageForDisplay, index: number) => {
     switch (message.sender) {
       case "user":
-        return <InputMessage key={index}>{message.text}</InputMessage>;
+        return (
+          <InputMessage key={index} sendAt={new Date(message.created_at)}>
+            {message.text}
+          </InputMessage>
+        );
       case "project":
         return (
           <OutputMessage.System
             key={index}
+            sendAt={new Date(message.created_at)}
             realTime={message.realTimeReceived}
             last={index === messages.length - 1}
             followUp={
@@ -70,8 +75,8 @@ export default function Chat() {
         operating_hours={settings?.operating_hours}
         onDisableChat={handleDisableChat}
       />
-      <div className="flex-1 overflow-y-auto" ref={scrollRef}>
-        <div className="flex flex-col gap-4 px-4 pb-4">
+      <div className="flex-1 overflow-y-auto pb-4" ref={scrollRef}>
+        <div className="flex flex-col gap-4 p-4">
           {renderWelcomeMessage()}
           {messages.map(renderMessage)}
           {isTyping && (
