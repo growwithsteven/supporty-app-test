@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createSupabaseUser } from "@/lib/supabase";
+import { ContactReqPayload, Message } from "@/types/message";
 
 const client = axios.create({
   baseURL: "/api",
@@ -19,10 +20,8 @@ client.interceptors.request.use(async (config) => {
   return config;
 });
 
-type SendMessageParams = {
+type SendMessageParams = Pick<Message, "text" | "internalText" | "type"> & {
   projectUuid: string;
-  text: string;
-  internalText?: string;
 };
 
 export async function sendMessage(params: SendMessageParams) {
@@ -33,6 +32,13 @@ export async function saveSystemMessage(
   params: Omit<SendMessageParams, "internalText">,
 ) {
   return client.post("/messages/system", params);
+}
+
+export async function saveContactInfo(params: {
+  projectUuid: string;
+  payload: ContactReqPayload;
+}) {
+  return client.post("/messages/system/contact_req", params);
 }
 
 export async function disableChat(params: { projectUuid: string }) {

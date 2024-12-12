@@ -21,14 +21,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Chat not found" }, { status: 404 });
   }
 
-  await supabase.from("messages").insert({
-    chat_id: chat.id,
-    project_uuid: chat.project_uuid,
-    sender: "project",
-    text: text,
-    type: type,
-    payload: payload,
-  });
+  await supabase
+    .from("messages")
+    .update({ payload })
+    .eq("chat_id", chat.id)
+    .eq("sender", "project")
+    .eq("type", "contact_req")
+    .single();
 
-  return NextResponse.json({ message: "Message saved" }, { status: 200 });
+  return NextResponse.json({ message: "Contact info saved" }, { status: 200 });
 }

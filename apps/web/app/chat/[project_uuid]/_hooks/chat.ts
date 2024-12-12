@@ -2,22 +2,27 @@ import * as api from "@/lib/user-api";
 
 import { createSupabaseUser } from "@/lib/supabase";
 import toast from "react-hot-toast";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { useUserAuth } from "./user-auth";
 import { Faq, Project, ProjectSettings } from "@/types/project";
-import { Message } from "@/types/message";
+import { ContactReqPayload, Message } from "@/types/message";
 import { RealtimePostgresInsertPayload } from "@supabase/supabase-js";
-import { useMessages } from "./useMessages";
+import { MessageForDisplay, useMessages } from "./useMessages";
+import { isNotNil } from "es-toolkit";
+import { Nilable } from "@/types/utils";
+import { isEmptyStringOrNil } from "@/lib/string";
+import { assert } from "@toss/assert";
 
 export function useChat(projectUuid: Project["uuid"]) {
   const [loading, setLoading] = useState(true);
-
   const [isTyping, setIsTyping] = useState(false);
 
+  const [initialTime, setInitialTime] = useState<Nilable<Date>>(null);
   const [settings, setSettings] = useState<ProjectSettings | null>(null);
+
   const messages = useMessages();
-  const { user } = useUserAuth();
+  const { user, updateUser } = useUserAuth();
 
   const fetchMessages = async () => {
     if (!user) {
@@ -28,10 +33,12 @@ export function useChat(projectUuid: Project["uuid"]) {
 
     const { data: chat } = await supabase
       .from("chats")
-      .select("*")
+      .select("id, created_at")
       .eq("project_uuid", projectUuid)
       .eq("user_id", user.id)
       .maybeSingle();
+
+    setInitialTime(new Date(chat?.created_at ?? new Date()));
 
     if (chat) {
       const { data: _messages } = await supabase
@@ -50,9 +57,11 @@ export function useChat(projectUuid: Project["uuid"]) {
     const supabase = createSupabaseUser();
     const { data: projectDetail } = await supabase
       .from("project_details")
-      .select("*")
+      .select("settings")
       .eq("project_uuid", projectUuid)
       .single();
+
+    assert(projectDetail != null, "Project detail not found");
 
     setSettings(projectDetail.settings);
   };
@@ -77,7 +86,7 @@ export function useChat(projectUuid: Project["uuid"]) {
         (payload: RealtimePostgresInsertPayload<Message>) => {
           const message = payload.new;
           if (message.project_uuid === projectUuid) {
-            messages.addByProject(message.text);
+            messages.addByProject(message as MessageForDisplay);
           }
         },
       )
@@ -100,43 +109,109 @@ export function useChat(projectUuid: Project["uuid"]) {
     }
   }, [messages]);
 
-  const handleSend = (text: string, internalText?: string) => {
-    messages.addByUser(text);
+  // private
 
-    api.sendMessage({ projectUuid, text, internalText }).catch(() => {
-      toast.error("Failed to send message");
+  const _saveUserMessage = (
+    params: Pick<Message, "text" | "internalText" | "type">,
+  ) => {
+    api.sendMessage({ projectUuid, ...params }).catch(() => {
+      console.error("Failed to save user message");
     });
   };
 
-  const handleSendBySystem = (text: string) => {
-    api.saveSystemMessage({ projectUuid, text }).catch(() => {
+  /** 주의: messages.addByProject는 따로 하지 않고 channel로 수신한다 */
+  const _saveSystemMessage = (
+    params: Pick<Message, "text" | "type" | "payload">,
+  ) => {
+    api.saveSystemMessage({ projectUuid, ...params }).catch(() => {
       console.error("Failed to save system message");
     });
   };
 
+  const _submitContactInfo = (payload: ContactReqPayload) => {
+    api.saveContactInfo({ projectUuid, payload }).catch(() => {
+      console.error("Failed to save system message");
+    });
+
+    updateUser({ email: payload.email, phone: payload.phoneNumber });
+  };
+
+  // public
+
+  const handleSend = (text: string) => {
+    const isFirstChatMessage =
+      messages.data.filter((x) => x.type === "default").length === 0;
+
+    const params = { text, type: "default" } as const;
+
+    messages.addByUser(params);
+    _saveUserMessage(params);
+
+    if (isFirstChatMessage) {
+      _saveSystemMessage({
+        text: "contact_req",
+        type: "contact_req",
+        payload: { phoneNumber: "", email: "" },
+      });
+    }
+  };
+
   const handleFaqSelect = (faq: Faq) => {
-    handleSend(faq.question, `[FAQ clicked] - ${faq.question}`);
+    const params = {
+      text: faq.question,
+      internalText: `[FAQ clicked] - ${faq.question}`,
+      type: "faq",
+    } as const;
+
+    messages.addByUser(params);
+    _saveUserMessage(params);
 
     setIsTyping(true);
     setTimeout(() => {
-      handleSendBySystem(faq.answer);
+      _saveSystemMessage(params);
     }, 1500);
+  };
+
+  const handleContactReqSubmit = (payload: ContactReqPayload) => {
+    _saveUserMessage({
+      text: `[Contact Info Submitted] - ${payload.phoneNumber} - ${payload.email}`,
+      type: "contact_res",
+    });
+    _submitContactInfo(payload);
   };
 
   const handleDisableChat = () => {
     toast.success("New Conversation Started");
-    messages.init([]);
 
+    messages.init([]);
     api.disableChat({ projectUuid }).catch(() => {});
   };
+
+  const welcomeMessage: Nilable<MessageForDisplay> = useMemo(
+    () =>
+      settings != null &&
+      !isEmptyStringOrNil(settings.welcomeMessage) &&
+      initialTime != null
+        ? {
+            type: "default",
+            text: settings.welcomeMessage!,
+            sender: "project",
+            created_at: initialTime.toISOString(),
+          }
+        : null,
+    [settings, initialTime],
+  );
 
   return {
     loading,
     settings,
-    messages: messages.data,
+    messages: [welcomeMessage, ...messages.data].filter(isNotNil),
+
     handleSend,
     handleFaqSelect,
+    handleContactReqSubmit,
     handleDisableChat,
+
     isTyping,
   };
 }

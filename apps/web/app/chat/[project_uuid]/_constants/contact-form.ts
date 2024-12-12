@@ -1,0 +1,1 @@
+export const CONTACT_FORM_TEXT = `Please leave your contact information. We'll send you a notification through SMS and Email if you are offline.\n\n(This will only be used to send you a notification if you are not online)`;

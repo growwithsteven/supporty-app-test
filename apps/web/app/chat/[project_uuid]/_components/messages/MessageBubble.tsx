@@ -20,7 +20,12 @@ export default function MessageBubble({
   const sendAtText = sendAt ? format(sendAt, "hh:mm a") : undefined;
 
   return (
-    <div className="relative" onClick={() => setIsSendAtVisible(true)}>
+    <div
+      className="relative"
+      onClick={() => {
+        if (sendAt) setIsSendAtVisible(true);
+      }}
+    >
       <div
         className={cn(
           "chat",
@@ -29,7 +34,10 @@ export default function MessageBubble({
         )}
       >
         <div
-          className={cn("chat-bubble leading-relaxed", className)}
+          className={cn(
+            "chat-bubble leading-relaxed whitespace-pre-wrap",
+            className,
+          )}
           {...props}
         />
       </div>

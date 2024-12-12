@@ -9,11 +9,17 @@ import Loading from "./_components/loading";
 import OutputMessage from "./_components/messages/output-message";
 import { useChat } from "./_hooks/chat";
 import { useParams } from "next/navigation";
-import { FaqList } from "./_components/messages/FaqList";
+import { FaqList } from "./_components/messages/system/FaqList";
 import { LoadingDots } from "./_components/LoadingDots";
-import { MessageForDisplay } from "./_hooks/useMessages";
+import { StoredMessage } from "./_hooks/useMessages";
+import { useUserAuth } from "./_hooks/user-auth";
+import { ContactReq } from "./_components/messages/system/ContactReq";
+import { MessageType } from "@/types/message";
+import { last } from "es-toolkit";
 
 export default function Chat() {
+  useUserAuth.Init();
+
   const { project_uuid: projectUuid } = useParams();
   const {
     loading,
@@ -21,6 +27,7 @@ export default function Chat() {
     messages,
     handleSend,
     handleFaqSelect,
+    handleContactReqSubmit,
     handleDisableChat,
     isTyping,
   } = useChat(projectUuid as string);
@@ -35,13 +42,7 @@ export default function Chat() {
     }
   }, [messages]);
 
-  const renderWelcomeMessage = () => {
-    if (settings?.welcomeMessage) {
-      return <OutputMessage>{settings.welcomeMessage}</OutputMessage>;
-    }
-  };
-
-  const renderMessage = (message: MessageForDisplay, index: number) => {
+  const renderMessage = (message: StoredMessage, index: number) => {
     switch (message.sender) {
       case "user":
         return (
@@ -50,15 +51,32 @@ export default function Chat() {
           </InputMessage>
         );
       case "project":
+        message.text = message.text + " ";
+
+        if (message.type === MessageType.contact_req) {
+          return (
+            <ContactReq
+              key={index}
+              {...message}
+              onSubmit={handleContactReqSubmit}
+            />
+          );
+        }
+
+        const showFollowUp =
+          messages.findLastIndex(
+            (x) => x.type === MessageType.default && x.sender === "project",
+          ) === index;
+
         return (
           <OutputMessage.System
             key={index}
             sendAt={new Date(message.created_at)}
             realTime={message.realTimeReceived}
-            last={index === messages.length - 1}
+            showFollowUp={showFollowUp}
             followUp={
               settings != null && (
-                <FaqList faq={settings?.faq} onSelect={handleFaqSelect} />
+                <FaqList faq={settings.faq} onSelect={handleFaqSelect} />
               )
             }
           >
@@ -77,7 +95,6 @@ export default function Chat() {
       />
       <div className="flex-1 overflow-y-auto pb-4" ref={scrollRef}>
         <div className="flex flex-col gap-4 p-4">
-          {renderWelcomeMessage()}
           {messages.map(renderMessage)}
           {isTyping && (
             <OutputMessage>

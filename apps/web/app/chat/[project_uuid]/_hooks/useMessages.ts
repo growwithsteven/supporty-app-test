@@ -3,34 +3,38 @@ import { Nilable } from "@/types/utils";
 import { useState } from "react";
 import { useMemo } from "react";
 
-export type MessageForDisplay = Pick<
+export type StoredMessage = Pick<
   Message,
-  "sender" | "text" | "created_at"
+  "sender" | "text" | "created_at" | "type"
 > & {
   realTimeReceived?: true;
 };
 
+export type MessageForDisplay = Omit<StoredMessage, "type"> & {
+  type: Exclude<Message["type"], "contact_res">;
+};
+
 export function useMessages() {
-  const [messages, setMessages] = useState<MessageForDisplay[]>([]);
+  const [messages, setMessages] = useState<StoredMessage[]>([]);
 
   return useMemo(
     () => ({
-      data: messages,
-      init(_messages: Nilable<MessageForDisplay[]>) {
+      data: messages.filter((x) => x.type !== "contact_res"),
+      init(_messages?: Nilable<MessageForDisplay[]>) {
         setMessages(_messages ?? []);
       },
-      addByUser(text: string) {
+      addByUser(params: Pick<MessageForDisplay, "text" | "type">) {
         setMessages((prev) => [
           ...prev,
-          { sender: "user", text, created_at: new Date().toISOString() },
+          { sender: "user", ...params, created_at: new Date().toISOString() },
         ]);
       },
-      addByProject(text: string) {
+      addByProject(params: Pick<MessageForDisplay, "text" | "type">) {
         setMessages((prev) => [
           ...prev,
           {
             sender: "project",
-            text,
+            ...params,
             realTimeReceived: true,
             created_at: new Date().toISOString(),
           },

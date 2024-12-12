@@ -24,18 +24,19 @@ export default function OutputMessage(
 OutputMessage.System = function SystemMessage({
   children,
   realTime,
-  last,
+  showFollowUp,
   followUp,
   sendAt,
 }: ComponentProps<typeof OutputMessage> & {
   children: string;
   realTime?: boolean;
-  last?: boolean;
+  showFollowUp?: boolean;
   followUp?: React.ReactNode;
 }) {
   const [displayedIndex, setDisplayedIndex] = useState(0);
 
-  const animateEnabled = realTime && typeof children === "string" && last;
+  const animateEnabled =
+    realTime && typeof children === "string" && showFollowUp;
   const animateFinished = displayedIndex === children.length;
 
   useEffect(() => {
@@ -68,7 +69,7 @@ OutputMessage.System = function SystemMessage({
       <OutputMessage sendAt={sendAt}>
         <div {...renderProps} />
       </OutputMessage>
-      {last && (
+      {showFollowUp && (
         <div
           className={cn(
             "transition-opacity duration-300 ease-in",
