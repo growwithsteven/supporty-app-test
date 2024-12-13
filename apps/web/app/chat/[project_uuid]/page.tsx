@@ -78,7 +78,7 @@ export default function Chat() {
         realTime={message.realTimeReceived}
         showFollowUp={showFollowUp}
         followUp={
-          settings != null && (
+          settings?.faq != null && (
             <FaqList faq={settings.faq} onSelect={handleFaqSelect} />
           )
         }
