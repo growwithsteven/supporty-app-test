@@ -48,7 +48,7 @@ export default function Settings() {
 
     const { data: projectDetail } = await supabase
       .from("project_details")
-      .select("*")
+      .select("settings")
       .eq("project_uuid", _project.uuid)
       .single();
 
@@ -57,6 +57,10 @@ export default function Settings() {
     }
 
     setSettings(projectDetail.settings);
+    setWelcomeMessage(projectDetail.settings?.welcomeMessage ?? "");
+    setOpenTime(projectDetail.settings?.opening_hours?.open ?? null);
+    setCloseTime(projectDetail.settings?.opening_hours?.close ?? null);
+    setFaq(projectDetail.settings?.faq ?? []);
   };
 
   useEffect(() => {
