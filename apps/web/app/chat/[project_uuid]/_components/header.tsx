@@ -2,9 +2,9 @@ import { ProjectSettings } from "@/types/project";
 import { FaBars } from "react-icons/fa6";
 
 export default function Header({
-  operating_hours,
+  opening_hours,
   onDisableChat,
-}: Pick<ProjectSettings, "operating_hours"> & {
+}: Pick<ProjectSettings, "opening_hours"> & {
   onDisableChat: () => void;
 }) {
   const handleDropDownClick = () => {
@@ -18,11 +18,11 @@ export default function Header({
     <div className="flex w-full items-center justify-between px-4 py-2 border-b border-gray-400 dark:border-gray-600">
       <div className="flex-1" />
       <div className="flex-1 text-center text-sm text-gray-400">
-        {operating_hours != null ? (
+        {opening_hours != null ? (
           <>
-            <span className="text-xs">Operating Hours</span>
+            <span className="text-xs">Opening Hours</span>
             <br />
-            {operating_hours.open} - {operating_hours.close}
+            {opening_hours.open} - {opening_hours.close}
           </>
         ) : (
           <span>Available 24/7</span>

@@ -15,7 +15,7 @@ export interface ProjectSettings {
   welcomeMessage?: string;
   faq: Faq[];
 
-  operating_hours?: {
+  opening_hours?: {
     open: string;
     close: string;
   };
