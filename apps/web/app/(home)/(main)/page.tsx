@@ -100,8 +100,8 @@ function Section({
   return (
     <section
       ref={elementRef}
-      className={`py-24 mb-12 flex flex-col items-center w-full ${
-        isVisible ? "fade" : ""
+      className={`py-24 mb-12 flex flex-col items-center w-full transition-all duration-500 ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
       }`}
     >
       {children}
