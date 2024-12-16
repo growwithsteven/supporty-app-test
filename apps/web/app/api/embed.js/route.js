@@ -1,10 +1,12 @@
 export async function GET(req) {
-  const projectUuid = req.nextUrl.searchParams.get('p')
-  const isAnimated = req.nextUrl.searchParams.get('anim') === 'true'
-  const chatUrl = `https://supporty.app/chat/${projectUuid}`
+  const projectUuid = req.nextUrl.searchParams.get("p");
+  const isAnimated = req.nextUrl.searchParams.get("anim") === "true";
+  const chatUrl = `https://supporty.app/chat/${projectUuid}`;
 
   return new Response(
     `;(function () {
+  if (typeof window === 'undefined') return; // 클라이언트 환경 체크
+
   var openSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 28px; height: auto;"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 48C141.1 48 48 141.1 48 256l0 40c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-40C0 114.6 114.6 0 256 0S512 114.6 512 256l0 144.1c0 48.6-39.4 88-88.1 88L313.6 488c-8.3 14.3-23.8 24-41.6 24l-32 0c-26.5 0-48-21.5-48-48s21.5-48 48-48l32 0c17.8 0 33.3 9.7 41.6 24l110.4 .1c22.1 0 40-17.9 40-40L464 256c0-114.9-93.1-208-208-208zM144 208l16 0c17.7 0 32 14.3 32 32l0 112c0 17.7-14.3 32-32 32l-16 0c-35.3 0-64-28.7-64-64l0-48c0-35.3 28.7-64 64-64zm224 0c35.3 0 64 28.7 64 64l0 48c0 35.3-28.7 64-64 64l-16 0c-17.7 0-32-14.3-32-32l0-112c0-17.7 14.3-32 32-32l16 0z" fill="white" /></svg>'
   var closeSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" style="width: 24px; height: auto;"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" fill="#505050"/></svg>'
 
@@ -27,7 +29,7 @@ export async function GET(req) {
     cursor: pointer;
     font-size: 16px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    transition: ${isAnimated ? 'transform 0.1s ease, background-color 0.2s ease' : 'none'};
+    transition: ${isAnimated ? "transform 0.1s ease, background-color 0.2s ease" : "none"};
   \`
 
   var chatIframe = document.createElement('iframe')
@@ -43,13 +45,16 @@ export async function GET(req) {
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     z-index: 9999;
     opacity: 0;
-    transition: ${isAnimated ? 'bottom 0.2s ease, opacity 0.2s ease' : 'none'};
+    transition: ${isAnimated ? "bottom 0.2s ease, opacity 0.2s ease" : "none"};
     display: none;
   \`
 
-  document.addEventListener('DOMContentLoaded', function() {
-    document.body.appendChild(chatButton)
-    document.body.appendChild(chatIframe)
+  function render() {
+    // 이미 추가되었으면 추가하지 않음
+    if (chatButton.parentNode || chatIframe.parentNode) return;
+
+    document.body.appendChild(chatButton);
+    document.body.appendChild(chatIframe);
 
     if (${isAnimated}) {
       chatButton.addEventListener('mousedown', function () {
@@ -84,12 +89,20 @@ export async function GET(req) {
         chatButton.style.backgroundColor = '#007bff'
       }
     })
-  });
+  }
+
+  // DOM 준비가 필요 없다면 바로 append
+  render();
+
+  // DOM 준비가 필요하면 이벤트 리스너 추가
+  document.addEventListener('DOMContentLoaded', function() {
+    render();
+  })
 })()`,
     {
       headers: {
-        'Content-Type': 'application/javascript',
+        "Content-Type": "application/javascript",
       },
     },
-  )
+  );
 }
