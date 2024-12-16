@@ -16,6 +16,7 @@ export function ContactReq({ type, payload, created_at, onSubmit }: Props) {
 
   const { register, handleSubmit, formState } = useForm<ContactReqPayload>({
     defaultValues: payload,
+    resetOptions: { keepIsSubmitted: true },
   });
 
   const disabled = !formState.isDirty || !formState.isValid;
