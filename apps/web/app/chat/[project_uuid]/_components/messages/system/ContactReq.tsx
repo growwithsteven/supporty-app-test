@@ -6,6 +6,7 @@ import OutputMessage from "../output-message";
 import { FaCheck } from "react-icons/fa6";
 import { isEmptyStringOrNil } from "@/lib/string";
 import { cn } from "@/lib/cn";
+import { isValidEmail } from "@/lib/validator";
 
 interface Props extends Pick<Message, "type" | "payload" | "created_at"> {
   onSubmit: (payload: ContactReqPayload) => void;
@@ -19,7 +20,7 @@ export function ContactReq({ type, payload, created_at, onSubmit }: Props) {
     resetOptions: { keepIsSubmitted: true },
   });
 
-  const disabled = !formState.isDirty || !formState.isValid;
+  const disabled = !formState.isDirty;
   const saved =
     formState.isSubmitted ||
     !isEmptyStringOrNil(payload.phoneNumber) ||
@@ -39,7 +40,6 @@ export function ContactReq({ type, payload, created_at, onSubmit }: Props) {
             <span className="label-text text-gray-200">Phone Number</span>
           </div>
           <input
-            type="tel"
             className="w-full p-3 rounded-lg border border-gray-500 text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed"
             disabled={saved}
             placeholder="Enter details"
@@ -51,7 +51,6 @@ export function ContactReq({ type, payload, created_at, onSubmit }: Props) {
             <span className="label-text text-gray-200">Email</span>
           </div>
           <input
-            type="email"
             disabled={saved}
             className="w-full p-3 rounded-lg border border-gray-500 text-gray-300 disabled:cursor-not-allowed disabled:opacity-40"
             placeholder="Enter details"
