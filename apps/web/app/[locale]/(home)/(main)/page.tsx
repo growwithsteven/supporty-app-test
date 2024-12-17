@@ -11,6 +11,8 @@ import { useTranslations } from "next-intl";
 import { useRouter, Link } from "@/i18n/routing";
 import { LocaleSelect } from "@/src/components/LocaleSelect";
 
+const SUPPORTY_PROJECT_UUID = "d2fe216a-c300-4bd1-962a-eff11ecd2026";
+
 interface Props {
   cta?: React.ReactNode;
 }
@@ -27,7 +29,9 @@ export default function Home({ cta = <WaitlistButton /> }: Props) {
 
   return (
     <>
-      <Script src="https://supporty.app/api/embed.js?p=d2fe216a-c300-4bd1-962a-eff11ecd2026&anim=true" />
+      <Script
+        src={`https://supporty.app/api/embed.js?p=${SUPPORTY_PROJECT_UUID}&anim=true`}
+      />
       <div className="flex flex-col items-center bg-white">
         <header className="w-full flex justify-between items-center p-4">
           <Link href="/">
@@ -46,6 +50,18 @@ export default function Home({ cta = <WaitlistButton /> }: Props) {
             </Section.Title>
             <Spacing size={20} />
             <div className="py-6">{cta}</div>
+
+            <div className="mockup-phone hidden md:block">
+              <div className="camera"></div>
+              <div className="display">
+                <div className="artboard artboard-demo phone-1 max-w-full">
+                  <iframe
+                    className="h-full w-full"
+                    src={`/chat/${SUPPORTY_PROJECT_UUID}`}
+                  />
+                </div>
+              </div>
+            </div>
           </Section>
           <Section>
             <Section.Paragraph>
@@ -107,8 +123,8 @@ Section.Title = function SectionTitle({
   return (
     <h2
       className={cn(
+        "text-2xl md:text-4xl font-bold !leading-[1.6] text-gray-800 whitespace-pre",
         className,
-        "text-4xl font-bold !leading-[1.6] text-gray-800 whitespace-pre",
       )}
     >
       {children}
@@ -123,7 +139,12 @@ Section.Paragraph = function SectionParagraph({
   className?: string;
 }) {
   return (
-    <p className={cn("py-2 !leading-loose text-xl whitespace-pre", className)}>
+    <p
+      className={cn(
+        "py-2 !leading-loose text-lg md:text-xl whitespace-pre",
+        className,
+      )}
+    >
       {children}
     </p>
   );
@@ -139,7 +160,7 @@ Section.Paragraph2 = function SectionParagraph2({
   return (
     <p
       className={cn(
-        "py-2 !leading-loose text-lg text-gray-400 whitespace-pre",
+        "py-2 !leading-loose text-base md:text-lg text-gray-400 whitespace-pre",
         className,
       )}
     >
