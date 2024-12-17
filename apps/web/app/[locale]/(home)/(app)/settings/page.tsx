@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { updateProjectSettings } from "@/lib/project-api";
 import { useProjectAuth } from "@/hooks/project-auth";
 import { Faq, Project, ProjectSettings } from "@/types/project";
-import TimePicker from "@/app/(home)/(app)/_components/TimePicker";
+import TimePicker from "@/app/[locale]/(home)/(app)/_components/TimePicker";
 import { xor } from "@/lib/xor";
 import { FaqSection } from "./_components/FaqSection";
 

@@ -11,5 +11,11 @@ export default function SlackAuthPage() {
     router.replace(SLACK_OAUTH_URL);
   }, []);
 
-  return <div>Waiting for Slack to authorize...</div>;
+  return (
+    <html>
+      <body>
+        <div>Waiting for Slack to authorize...</div>
+      </body>
+    </html>
+  );
 }

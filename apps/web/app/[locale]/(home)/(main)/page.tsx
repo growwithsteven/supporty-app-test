@@ -9,6 +9,7 @@ import { useIntersectionObserver } from "@/src/hooks/useIntersectionObserver";
 import Script from "next/script";
 import { WaitlistButton } from "@/src/components/WaitlistButton";
 import { Spacing } from "@/src/components/Spacing";
+import { useTranslations } from "next-intl";
 
 interface Props {
   cta?: React.ReactNode;
@@ -16,6 +17,7 @@ interface Props {
 export default function Home({ cta = <WaitlistButton /> }: Props) {
   const { authState } = useProjectAuth();
   const router = useRouter();
+  const t = useTranslations("home");
 
   useEffect(() => {
     if (authState) {
@@ -29,62 +31,40 @@ export default function Home({ cta = <WaitlistButton /> }: Props) {
       <div className="flex flex-col items-center bg-white">
         <header className="w-full flex justify-between items-center p-4">
           <Link href="/">
-            <img src="/logo.png" alt="Supporty logo" className="w-28" />
+            <img src="/logo.png" alt={t("header.logoAlt")} className="w-28" />
           </Link>
         </header>
         <main className="flex flex-col items-center text-center text-gray-800 py-20">
           <Section fade={false}>
-            <Section.Title className="!font-medium !text-gray-700 md:text-5xl">
-              Make <b className="text-gray-800">Slack Channel</b>
-              <br /> into a <b className="text-gray-800"> CS Center</b> <br />
-              <span className="text-4xl">in Minutes</span>
+            <Section.Title className="!text-gray-700 md:text-5xl">
+              {t("main.section1.title")}
             </Section.Title>
             <Spacing size={20} />
             <div className="py-6">{cta}</div>
           </Section>
           <Section>
             <Section.Paragraph>
-              Slack ↔️ Intercom, <br />
-              Slack ↔️ Zendesk, <br />
-              <br />
-              Switch Switch Switch...
-              <br />
-              <br />
+              {t("main.section2.paragraph")}
             </Section.Paragraph>
-            <Section.Title>
-              Why do we need to
-              <br />
-              switch between tools?
-              <br />
-              It's so annoying 🫨
-            </Section.Title>
+            <Section.Title>{t("main.section2.title")}</Section.Title>
           </Section>
           <Section>
-            <Section.Title>
-              Turn your Slack Workspace into
-              <br /> a Customer-Support Chat! 🎉
-            </Section.Title>
+            <Section.Title>{t("main.section3.title")}</Section.Title>
             <Section.Paragraph>
-              With Supporty, you can handle
-              <br />
-              both internal and external conversations
-              <br /> in the same place—your Slack Workspace.
+              {t("main.section3.paragraph")}
             </Section.Paragraph>
           </Section>
           <Section>
             <Section.Paragraph>
-              Click below 👇 button
-              <br /> to make your customer chat
-              <br /> in 10 seconds ✨
+              {t("main.section4.paragraph")}
             </Section.Paragraph>
             <Spacing size={20} />
             {cta}
           </Section>
           <Section>
-            <Section.Paragraph>
-              Supporty is in beta—completely free,
-              <br /> no credit card required 😊
-            </Section.Paragraph>
+            <Section.Paragraph2>
+              {t("main.section5.paragraph")}
+            </Section.Paragraph2>
           </Section>
         </main>
       </div>
@@ -123,7 +103,7 @@ Section.Title = function SectionTitle({
     <h2
       className={cn(
         className,
-        "text-4xl font-bold leading-[1.4] text-gray-800",
+        "text-4xl font-bold !leading-[1.6] text-gray-800 whitespace-pre",
       )}
     >
       {children}
@@ -138,6 +118,27 @@ Section.Paragraph = function SectionParagraph({
   className?: string;
 }) {
   return (
-    <p className={cn("py-2 leading-loose text-xl", className)}>{children}</p>
+    <p className={cn("py-2 !leading-loose text-xl whitespace-pre", className)}>
+      {children}
+    </p>
+  );
+};
+
+Section.Paragraph2 = function SectionParagraph2({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <p
+      className={cn(
+        "py-2 !leading-loose text-lg text-gray-400 whitespace-pre",
+        className,
+      )}
+    >
+      {children}
+    </p>
   );
 };

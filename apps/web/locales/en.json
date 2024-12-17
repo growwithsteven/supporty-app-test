@@ -1,0 +1,26 @@
+{
+  "home": {
+    "header": {
+      "logoAlt": "Supporty logo"
+    },
+    "main": {
+      "section1": {
+        "title": "Make Slack Channel\ninto a CS Center\nin Minutes"
+      },
+      "section2": {
+        "paragraph": "Slack ↔️ Intercom,\nSlack ↔️ Zendesk,\n\nSwitch Switch Switch...",
+        "title": "Why do we need to\nswitch between tools?\nIt's so annoying 🫨"
+      },
+      "section3": {
+        "title": "Turn your Slack Workspace into\na Customer-Support Chat! 🎉",
+        "paragraph": "With Supporty, you can handle\nboth internal and external conversations\nin the same place—your Slack Workspace."
+      },
+      "section4": {
+        "paragraph": "Click below 👇 button\nto make your customer chat\nin 10 seconds ✨"
+      },
+      "section5": {
+        "paragraph": "Supporty is in beta—completely free,\nno credit card required 😊"
+      }
+    }
+  }
+}
