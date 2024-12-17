@@ -3,7 +3,15 @@ import { routing } from "./i18n/routing";
 
 import { NextRequest, NextResponse } from "next/server";
 
+const EXTERNAL_PATHS = ["/register", "/slack-auth", "/chat"];
+
 export default async function middleware(request: NextRequest) {
+  if (
+    EXTERNAL_PATHS.some((path) => request.nextUrl.pathname.startsWith(path))
+  ) {
+    return NextResponse.next();
+  }
+
   // Step 1: Use the incoming request (example)
   const defaultLocale =
     request.headers.get("x-your-custom-locale") ||
@@ -23,7 +31,6 @@ export default async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
-    "/((?!register|slack-auth|chat).*)",
     "/(ko|en)/:path*",
   ], // At this line, define into the matcher all the availables language you have defined into routing.ts
 };
