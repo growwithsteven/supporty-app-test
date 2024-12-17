@@ -1,4 +1,6 @@
-import { useRouter } from "next/router";
+"use client";
+
+import { useRouter } from "next/navigation";
 import { SLACK_OAUTH_URL } from "../(home)/(main)/_components/add-to-slack-button";
 import { useEffect } from "react";
 

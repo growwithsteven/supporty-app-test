@@ -1,18 +1,18 @@
-'use client'
+"use client";
 
-import copy from 'copy-to-clipboard'
-import { useProjectAuth } from '@/hooks/project-auth'
-import { useState } from 'react'
+import copy from "copy-to-clipboard";
+import { useProjectAuth } from "@/hooks/project-auth";
+import { useState } from "react";
 
 export default function Dashboard() {
-  const { authState, project } = useProjectAuth()
-  const [isCopied, setIsCopied] = useState(false)
-  const scriptUrl = `<script src="https://supporty.app/api/embed.js?p=${project?.uuid}&anim=true"></script>`
+  const { authState, project } = useProjectAuth();
+  const [isCopied, setIsCopied] = useState(false);
+  const scriptUrl = `<script src="https://supporty.app/api/embed.js?p=${project?.uuid}&anim=true"></script>`;
 
   const handleCopy = () => {
-    copy(scriptUrl)
-    setIsCopied(true)
-  }
+    copy(scriptUrl);
+    setIsCopied(true);
+  };
 
   return (
     authState && (
@@ -29,10 +29,10 @@ export default function Dashboard() {
           </pre>
         </div>
         <button
-          className={`btn btn-sm mt-2 ${isCopied ? 'btn-primary' : 'btn-accent'}`}
+          className={`btn btn-sm mt-2 ${isCopied ? "btn-primary" : "btn-accent"}`}
           onClick={handleCopy}
         >
-          {isCopied ? 'Copied!' : 'Copy tag'}
+          {isCopied ? "Copied!" : "Copy tag"}
         </button>
         <div className="divider" />
         <p className="py-6">
@@ -44,12 +44,12 @@ export default function Dashboard() {
             <div className="artboard artboard-demo phone-1 max-w-full">
               <iframe
                 className="h-full w-full"
-                src={`/chat/${project.uuid}`}
+                src={`/chat/${project!.uuid}`}
               />
             </div>
           </div>
         </div>
       </>
     )
-  )
+  );
 }

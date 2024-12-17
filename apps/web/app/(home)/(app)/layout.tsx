@@ -4,8 +4,9 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useProjectAuth } from "@/hooks/project-auth";
 import { useRouter } from "next/navigation";
+import LogoutButton from "../_components/logout-button";
 
-export default function AppLayout({ children }) {
+export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { authState } = useProjectAuth();
   const router = useRouter();
   const pathname = usePathname();
