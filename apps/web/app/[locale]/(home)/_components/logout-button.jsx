@@ -1,25 +1,22 @@
-'use client'
+"use client";
 
-import { useProjectAuth } from '@/hooks/project-auth'
-import { useRouter } from 'next/navigation'
+import { useProjectAuth } from "@/hooks/project-auth";
+import { useRouter } from "@/i18n/routing";
 
 export default function LogoutButton() {
-  const router = useRouter()
-  const { authState, logout } = useProjectAuth()
+  const router = useRouter();
+  const { authState, logout } = useProjectAuth();
 
   const handleLogout = () => {
-    logout()
-    router.push('/')
-  }
+    logout();
+    router.push("/");
+  };
 
   return (
     authState && (
-      <button
-        className="btn btn-ghost btn-sm"
-        onClick={handleLogout}
-      >
+      <button className="btn btn-ghost btn-sm" onClick={handleLogout}>
         Logout
       </button>
     )
-  )
+  );
 }

@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "@/i18n/routing";
 import { useProjectAuth } from "@/hooks/project-auth";
-import { useRouter } from "next/navigation";
 import LogoutButton from "../_components/logout-button";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {

@@ -1,34 +1,34 @@
-'use client'
+"use client";
 
-import { Suspense, useEffect } from 'react'
+import { Suspense, useEffect } from "react";
 
-import { useProjectAuth } from '@/hooks/project-auth'
-import { useRouter } from 'next/navigation'
-import { useSearchParams } from 'next/navigation'
+import { useProjectAuth } from "@/hooks/project-auth";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 
 function RegisterComponent() {
   const searchParams = useSearchParams(),
-    code = searchParams.get('code')
-  const router = useRouter()
-  const { register } = useProjectAuth()
+    code = searchParams.get("code");
+  const router = useRouter();
+  const { register } = useProjectAuth();
 
   useEffect(() => {
     if (!code) {
-      router.push('/')
-      return
+      router.push("/");
+      return;
     }
 
     register(code)
       .then(() => {
-        router.push('/dashboard')
+        router.push("/dashboard");
       })
       .catch((err) => {
-        router.push('/')
-        throw err
-      })
-  }, [code])
+        router.push("/");
+        throw err;
+      });
+  }, [code]);
 
-  return null
+  return null;
 }
 
 export default function Register() {
@@ -41,5 +41,5 @@ export default function Register() {
         <RegisterComponent />
       </Suspense>
     </>
-  )
+  );
 }
