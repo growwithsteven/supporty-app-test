@@ -17,7 +17,7 @@ const TimePicker: React.FC<TimePickerProps> = ({ label, value, onChange }) => {
     const minutes = value?.split(":")[1] || "00";
 
     if (hours && minutes) {
-      onChange(`${hours}:${minutes}`);
+      onChange(`${hours}:${minutes.toString().padStart(2, "0")}`);
     } else if (!hours && !minutes) {
       onChange(null);
     }
@@ -27,7 +27,7 @@ const TimePicker: React.FC<TimePickerProps> = ({ label, value, onChange }) => {
     const minutes = e.target.value;
     const hours = value?.split(":")[0] || "00";
     if (hours && minutes) {
-      onChange(`${hours}:${minutes}`);
+      onChange(`${hours}:${minutes.toString().padStart(2, "0")}`);
     } else if (!hours && !minutes) {
       onChange(null);
     }
