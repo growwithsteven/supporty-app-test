@@ -30,7 +30,7 @@ export default async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|images).*)",
     "/(ko|en)/:path*",
   ], // At this line, define into the matcher all the availables language you have defined into routing.ts
 };

@@ -31,7 +31,11 @@ export default function Home({ cta = <WaitlistButton /> }: Props) {
       <div className="flex flex-col items-center bg-white">
         <header className="w-full flex justify-between items-center p-4">
           <Link href="/">
-            <img src="/logo.png" alt={t("header.logoAlt")} className="w-28" />
+            <img
+              src="/images/logo.png"
+              alt={t("header.logoAlt")}
+              className="w-28"
+            />
           </Link>
           <LocaleSelect />
         </header>
