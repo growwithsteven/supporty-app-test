@@ -8,7 +8,8 @@
     },
     "main": {
       "section1": {
-        "title": "슬랙 내부에서\n고객문의까지 처리하세요"
+        "title": "슬랙 내부에서\n고객문의까지 처리하세요",
+        "try": "메세지를 보내보세요!"
       },
       "section2": {
         "paragraph": "슬랙 ↔️ 채널톡,\n채널톡 ↔️ 슬랙,\n\nAlt + Tab Tab Tab ...",

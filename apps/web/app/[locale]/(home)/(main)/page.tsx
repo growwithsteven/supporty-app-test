@@ -51,6 +51,7 @@ export default function Home({ cta = <WaitlistButton /> }: Props) {
             <Spacing size={20} />
             <div className="py-6">{cta}</div>
 
+            <Section.Paragraph2>{t("main.section1.try")}</Section.Paragraph2>
             <div className="mockup-phone hidden md:block">
               <div className="camera"></div>
               <div className="display">

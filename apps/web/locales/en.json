@@ -8,7 +8,8 @@
     },
     "main": {
       "section1": {
-        "title": "Make Slack Channel\ninto a CS Center\nin Minutes"
+        "title": "Make Slack Channel\ninto a CS Center\nin Minutes",
+        "try": "Try in now!"
       },
       "section2": {
         "paragraph": "Slack ↔️ Intercom,\nSlack ↔️ Zendesk,\n\nSwitch Switch Switch...",
