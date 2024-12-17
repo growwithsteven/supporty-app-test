@@ -89,29 +89,25 @@ export default function Chat() {
   };
 
   return (
-    <html>
-      <body>
-        <div className="flex h-screen flex-col text-base">
-          {loading && <Loading />}
-          <Header
-            opening_hours={settings?.opening_hours}
-            onDisableChat={handleDisableChat}
-          />
-          <div className="flex-1 overflow-y-auto pb-4" ref={scrollRef}>
-            <div className="flex flex-col gap-4 p-4">
-              {messages.map(renderMessage)}
-              {isTyping && (
-                <OutputMessage>
-                  <LoadingDots />
-                </OutputMessage>
-              )}
-            </div>
-          </div>
-          <div className="px-4 pb-4">
-            <Input onSend={handleSend} />
-          </div>
+    <div className="flex h-screen flex-col text-base">
+      {loading && <Loading />}
+      <Header
+        opening_hours={settings?.opening_hours}
+        onDisableChat={handleDisableChat}
+      />
+      <div className="flex-1 overflow-y-auto pb-4" ref={scrollRef}>
+        <div className="flex flex-col gap-4 p-4">
+          {messages.map(renderMessage)}
+          {isTyping && (
+            <OutputMessage>
+              <LoadingDots />
+            </OutputMessage>
+          )}
         </div>
-      </body>
-    </html>
+      </div>
+      <div className="px-4 pb-4">
+        <Input onSend={handleSend} />
+      </div>
+    </div>
   );
 }
