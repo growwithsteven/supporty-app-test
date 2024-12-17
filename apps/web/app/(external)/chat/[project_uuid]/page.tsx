@@ -15,7 +15,6 @@ import { StoredMessage } from "./_hooks/useMessages";
 import { useUserAuth } from "./_hooks/user-auth";
 import { ContactReq } from "./_components/messages/system/ContactReq";
 import { MessageSender, MessageType } from "@/types/message";
-import { last } from "es-toolkit";
 
 export default function Chat() {
   useUserAuth.Init();

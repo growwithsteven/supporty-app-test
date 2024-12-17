@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "@/i18n/routing";
+import { useRouter } from "next/navigation";
 import { SLACK_OAUTH_URL } from "@/src/components/StartButton";
 import { useEffect } from "react";
 

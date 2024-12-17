@@ -3,8 +3,7 @@
 import { Suspense, useEffect } from "react";
 
 import { useProjectAuth } from "@/hooks/project-auth";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "@/i18n/routing";
+import { useSearchParams, useRouter } from "next/navigation";
 
 function RegisterComponent() {
   const searchParams = useSearchParams(),
