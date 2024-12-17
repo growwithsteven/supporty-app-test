@@ -1,11 +1,13 @@
-const FORM_URL = "https://tally.so/r/3qjL1O";
+import { useTranslations } from "next-intl";
 
 export function WaitlistButton() {
+  const t = useTranslations("common");
+
   return (
     <>
       <a
         className="flex items-center border border-1 gap-3 rounded-lg rainbow-border p-1 overflow-hidden hover:scale-125 transition-all"
-        href={FORM_URL}
+        href={t("waitlist-form")}
         target="_blank"
       >
         <div className="font-medium text-xl text-white bg-black  transition-colors px-8 py-3 ">
