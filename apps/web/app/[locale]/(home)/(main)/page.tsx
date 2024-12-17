@@ -50,19 +50,6 @@ export default function Home({ cta = <WaitlistButton /> }: Props) {
             </Section.Title>
             <Spacing size={20} />
             <div className="py-6">{cta}</div>
-
-            <Section.Paragraph2>{t("main.section1.try")}</Section.Paragraph2>
-            <div className="mockup-phone hidden md:block">
-              <div className="camera"></div>
-              <div className="display">
-                <div className="artboard artboard-demo phone-1 max-w-full">
-                  <iframe
-                    className="h-full w-full"
-                    src={`/chat/${SUPPORTY_PROJECT_UUID}`}
-                  />
-                </div>
-              </div>
-            </div>
           </Section>
           <Section>
             <Section.Paragraph>
