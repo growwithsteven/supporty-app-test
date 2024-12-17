@@ -2,14 +2,13 @@
 
 import { useEffect } from "react";
 import { useProjectAuth } from "@/hooks/project-auth";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { cn } from "@/lib/cn";
 import { useIntersectionObserver } from "@/src/hooks/useIntersectionObserver";
 import Script from "next/script";
 import { WaitlistButton } from "@/src/components/WaitlistButton";
 import { Spacing } from "@/src/components/Spacing";
 import { useTranslations } from "next-intl";
+import { useRouter, Link } from "@/i18n/routing";
 
 interface Props {
   cta?: React.ReactNode;
