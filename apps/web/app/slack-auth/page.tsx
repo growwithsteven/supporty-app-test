@@ -1,7 +1,7 @@
 "use client";
 
+import { SLACK_OAUTH_URL } from "@/src/components/StartButton";
 import { useRouter } from "next/navigation";
-import { SLACK_OAUTH_URL } from "../(home)/(main)/_components/add-to-slack-button";
 import { useEffect } from "react";
 
 export default function SlackAuthPage() {

@@ -4,12 +4,16 @@ import { useEffect } from "react";
 import { useProjectAuth } from "@/hooks/project-auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { StartButton } from "@/src/components/StartButton";
 import { cn } from "@/lib/cn";
 import { useIntersectionObserver } from "@/src/hooks/useIntersectionObserver";
 import Script from "next/script";
+import { WaitlistButton } from "@/src/components/WaitlistButton";
+import { Spacing } from "@/src/components/Spacing";
 
-export default function Home() {
+interface Props {
+  cta?: React.ReactNode;
+}
+export default function Home({ cta = <WaitlistButton /> }: Props) {
   const { authState } = useProjectAuth();
   const router = useRouter();
 
@@ -35,9 +39,8 @@ export default function Home() {
               <br /> into a <b className="text-gray-800"> CS Center</b> <br />
               <span className="text-4xl">in Minutes</span>
             </Section.Title>
-            <div className="py-6">
-              <StartButton />
-            </div>
+            <Spacing size={20} />
+            <div className="py-6">{cta}</div>
           </Section>
           <Section>
             <Section.Paragraph>
@@ -74,7 +77,8 @@ export default function Home() {
               <br /> to make your customer chat
               <br /> in 10 seconds ✨
             </Section.Paragraph>
-            <StartButton />
+            <Spacing size={20} />
+            {cta}
           </Section>
           <Section>
             <Section.Paragraph>
