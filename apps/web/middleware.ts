@@ -1,7 +1,7 @@
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(request: NextRequest) {
   // Step 1: Use the incoming request (example)
@@ -23,6 +23,7 @@ export default async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+    "/((?!register|slack-auth|chat).*)",
     "/(ko|en)/:path*",
   ], // At this line, define into the matcher all the availables language you have defined into routing.ts
 };
