@@ -3,7 +3,7 @@ import { routing } from "./i18n/routing";
 
 import { NextRequest, NextResponse } from "next/server";
 
-const EXTERNAL_PATHS = ["/register", "/slack-auth", "/chat"];
+const EXTERNAL_PATHS = ["/register", "/slack-auth", "/chat", "/test"];
 
 export default async function middleware(request: NextRequest) {
   if (

@@ -26,3 +26,7 @@ export async function updateProjectSettings(settings) {
 export async function getProject(projectUuid) {
   return client.get(`/project?project_uuid=${projectUuid}`);
 }
+
+export async function getToken(puid) {
+  return client.get(`/project/token?uid=${puid}`);
+}
