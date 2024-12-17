@@ -11,7 +11,7 @@ export function WaitlistButton() {
         target="_blank"
       >
         <div className="font-medium text-xl text-white bg-black  transition-colors px-8 py-3 ">
-          Join Waitlist
+        Start Now
         </div>
       </a>
       <style jsx>{`
