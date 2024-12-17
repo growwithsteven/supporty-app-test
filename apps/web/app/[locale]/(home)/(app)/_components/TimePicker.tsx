@@ -8,8 +8,6 @@ interface TimePickerProps {
 }
 
 const TimePicker: React.FC<TimePickerProps> = ({ label, value, onChange }) => {
-  const [isAM, setIsAM] = useState(true);
-
   const handleClear = () => {
     onChange(null);
   };
@@ -17,8 +15,9 @@ const TimePicker: React.FC<TimePickerProps> = ({ label, value, onChange }) => {
   const handleHoursChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const hours = e.target.value;
     const minutes = value?.split(":")[1] || "00";
+
     if (hours && minutes) {
-      onChange(`${isAM ? hours : (parseInt(hours) + 12) % 24}:${minutes}`);
+      onChange(`${hours}:${minutes}`);
     } else if (!hours && !minutes) {
       onChange(null);
     }
@@ -28,25 +27,24 @@ const TimePicker: React.FC<TimePickerProps> = ({ label, value, onChange }) => {
     const minutes = e.target.value;
     const hours = value?.split(":")[0] || "00";
     if (hours && minutes) {
-      onChange(`${isAM ? hours : (parseInt(hours) + 12) % 24}:${minutes}`);
+      onChange(`${hours}:${minutes}`);
     } else if (!hours && !minutes) {
       onChange(null);
     }
   };
 
-  useEffect(() => {
-    if (value) {
-      const [hours, minutes] = value.split(":");
-      setIsAM(parseInt(hours) < 12);
-    }
-  }, [value]);
+  const currentHours = value != null ? parseInt(value.split(":")[0]) : null;
+  const currentMinutes = value != null ? parseInt(value.split(":")[1]) : null;
+  const amType = currentHours == null ? null : currentHours < 12 ? "AM" : "PM";
 
-  useEffect(() => {
-    if (value) {
-      const [hours, minutes] = value.split(":");
-      onChange(`${isAM ? hours : (parseInt(hours) + 12) % 24}:${minutes}`);
-    }
-  }, [isAM]);
+  const toggleAmpm = () => {
+    if (amType == null || currentHours == null || currentMinutes == null)
+      return;
+
+    onChange(
+      `${amType === "AM" ? (currentHours + 12) % 24 : currentHours - 12}:${currentMinutes}`,
+    );
+  };
 
   return (
     <div className="mt-4">
@@ -54,7 +52,7 @@ const TimePicker: React.FC<TimePickerProps> = ({ label, value, onChange }) => {
         <p className="text-xs text-gray-400">{label}</p>
         <div className="flex gap-2">
           <select
-            value={value?.split(":")[0] || ""}
+            value={currentHours != null ? (currentHours % 12)?.toString() : ""}
             onChange={handleHoursChange}
             className="input input-bordered"
           >
@@ -68,7 +66,7 @@ const TimePicker: React.FC<TimePickerProps> = ({ label, value, onChange }) => {
             ))}
           </select>
           <select
-            value={value?.split(":")[1] || ""}
+            value={currentMinutes != null ? currentMinutes.toString() : ""}
             onChange={handleMinutesChange}
             className="input input-bordered"
           >
@@ -84,10 +82,11 @@ const TimePicker: React.FC<TimePickerProps> = ({ label, value, onChange }) => {
           <div className="flex gap-2">
             <button
               type="button"
-              onClick={() => setIsAM(!isAM)}
+              onClick={toggleAmpm}
               className="btn btn-ghost"
+              disabled={amType == null}
             >
-              {isAM ? "AM" : "PM"}
+              {amType}
             </button>
             <button
               type="button"
