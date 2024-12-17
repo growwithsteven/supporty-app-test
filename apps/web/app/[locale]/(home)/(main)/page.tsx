@@ -9,6 +9,7 @@ import { WaitlistButton } from "@/src/components/WaitlistButton";
 import { Spacing } from "@/src/components/Spacing";
 import { useTranslations } from "next-intl";
 import { useRouter, Link } from "@/i18n/routing";
+import { LocaleSelect } from "@/src/components/LocaleSelect";
 
 interface Props {
   cta?: React.ReactNode;
@@ -32,6 +33,7 @@ export default function Home({ cta = <WaitlistButton /> }: Props) {
           <Link href="/">
             <img src="/logo.png" alt={t("header.logoAlt")} className="w-28" />
           </Link>
+          <LocaleSelect />
         </header>
         <main className="flex flex-col items-center text-center text-gray-800 py-20">
           <Section fade={false}>
