@@ -21,11 +21,11 @@ export default function Home({ cta = <WaitlistButton /> }: Props) {
   const router = useRouter();
   const t = useTranslations("home");
 
-  useEffect(() => {
-    if (authState) {
-      router.push("/dashboard");
-    }
-  }, [authState]);
+  // useEffect(() => {
+  //   if (authState) {
+  //     router.push("/dashboard");
+  //   }
+  // }, [authState]);
 
   return (
     <>
@@ -44,10 +44,12 @@ export default function Home({ cta = <WaitlistButton /> }: Props) {
           <LocaleSelect />
         </header>
         <main className="flex flex-col items-center text-center text-gray-800 py-20">
-          <Section fade={false}>
-            <Section.Title className="!text-gray-700 md:text-5xl">
-              {t("main.section1.title")}
-            </Section.Title>
+          <Section>
+            <Section.Title>{t("main.section3.title")}</Section.Title>
+            <Spacing size={8} />
+            <Section.Paragraph>
+              {t("main.section3.paragraph")}
+            </Section.Paragraph>
             <Spacing size={20} />
             <div className="py-6">{cta}</div>
           </Section>
@@ -56,12 +58,6 @@ export default function Home({ cta = <WaitlistButton /> }: Props) {
               {t("main.section2.paragraph")}
             </Section.Paragraph>
             <Section.Title>{t("main.section2.title")}</Section.Title>
-          </Section>
-          <Section>
-            <Section.Title>{t("main.section3.title")}</Section.Title>
-            <Section.Paragraph>
-              {t("main.section3.paragraph")}
-            </Section.Paragraph>
           </Section>
           <Section>
             <Section.Paragraph>
