@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
   const isFirstMessage = threadTs == null;
 
   const messageText = isFirstMessage
-    ? `*New conversation arrived!*\n🙋: "${message.text}"\n_Reply in the thread to send a message to the user._`
+    ? `*New conversation arrived!*\n💬: "${message.text}"\n_Reply in the thread to send a message to the user._`
     : (message.internal_text ?? message.text);
 
   // Send message to Slack
