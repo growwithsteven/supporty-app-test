@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createSupabaseUser } from "@/lib/supabase";
 import { ContactReqPayload, Message } from "@/types/message";
+import { AccessInfoEventData } from "@/app/(external)/chat/[project_uuid]/_hooks/useMessageEventListener";
 
 const client = axios.create({
   baseURL: "/api",
@@ -22,6 +23,7 @@ client.interceptors.request.use(async (config) => {
 
 type SendMessageParams = Pick<Message, "text" | "internalText" | "type"> & {
   projectUuid: string;
+  accessInfo?: AccessInfoEventData;
 };
 
 export async function sendMessage(params: SendMessageParams) {

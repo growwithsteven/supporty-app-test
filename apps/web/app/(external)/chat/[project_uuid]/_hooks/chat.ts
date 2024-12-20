@@ -13,6 +13,10 @@ import { isNotNil } from "es-toolkit";
 import { Nilable } from "@/types/utils";
 import { isEmptyStringOrNil } from "@/lib/string";
 import { assert } from "@toss/assert";
+import {
+  AccessInfoEventData,
+  useMessageEventListener,
+} from "./useMessageEventListener";
 
 export function useChat(projectUuid: Project["uuid"]) {
   const [loading, setLoading] = useState(true);
@@ -20,9 +24,16 @@ export function useChat(projectUuid: Project["uuid"]) {
 
   const [initialTime, setInitialTime] = useState<Nilable<Date>>(null);
   const [settings, setSettings] = useState<ProjectSettings | null>(null);
+  const [accessInfo, setAccessInfo] = useState<AccessInfoEventData>();
 
   const messages = useMessages();
   const { user, updateUser } = useUserAuth();
+
+  useMessageEventListener({
+    accessInfo: (data) => {
+      setAccessInfo(data);
+    },
+  });
 
   const fetchMessages = async () => {
     if (!user) {
@@ -114,7 +125,7 @@ export function useChat(projectUuid: Project["uuid"]) {
   const _saveUserMessage = (
     params: Pick<Message, "text" | "internalText" | "type">,
   ) => {
-    api.sendMessage({ projectUuid, ...params }).catch(() => {
+    api.sendMessage({ projectUuid, accessInfo, ...params }).catch(() => {
       console.error("Failed to save user message");
     });
   };

@@ -1,7 +1,10 @@
 export async function GET(req) {
   const projectUuid = req.nextUrl.searchParams.get("p");
   const isAnimated = req.nextUrl.searchParams.get("anim") === "true";
-  const chatUrl = `https://supporty.app/chat/${projectUuid}`;
+  const isTest = req.nextUrl.searchParams.get("test") === "true";
+
+  const baseUrl = isTest ? "http://localhost:3000" : "https://supporty.app";
+  const chatUrl = `${baseUrl}/chat/${projectUuid}`;
 
   return new Response(
     `;(function () {
@@ -68,8 +71,47 @@ export async function GET(req) {
       })
     }
 
+    function getPlatform() {
+      const ua = navigator.userAgent.toLowerCase();
+
+      if (/iphone/.test(ua)) {
+        return 'iphone';
+      } else if (/ipad/.test(ua)) {
+        return 'ipad';
+      } else if (/android/.test(ua)) {
+        return 'android';
+      } else if (/macintosh|mac os x/.test(ua)) {
+        return 'mac';
+      } else if (/windows/.test(ua)) {
+        return "windows";
+      } else {
+        return null;
+      }
+    }
+    function getBrowser() {
+      const ua = navigator.userAgent;
+      
+      if (ua.indexOf("Edg") !== -1 || ua.indexOf("Edge") !== -1) {
+        return "Edge";
+      } else if (ua.indexOf("Chrome") !== -1 && ua.indexOf("Safari") !== -1) {
+        // Chrome은 Safari 문자열을 포함하므로 Chrome 탐지 후 Safari 조건은 따로 체크
+        return "Chrome";
+      } else if (ua.indexOf("Safari") !== -1 && ua.indexOf("Chrome") === -1) {
+        return "Safari";
+      } else if (ua.indexOf("Firefox") !== -1) {
+        return "Firefox";
+      } else if (ua.indexOf("MSIE") !== -1 || ua.indexOf("Trident") !== -1) {
+        // IE 11 이하일 경우
+        return "IE";
+      } else {
+        return "Unknown";
+      }
+    }
+
     chatButton.addEventListener('click', function () {
       if (chatIframe.style.display === 'none') {
+        // open
+
         chatIframe.style.display = 'block'
         setTimeout(() => {
           chatIframe.style.bottom = '90px'
@@ -78,7 +120,17 @@ export async function GET(req) {
 
         chatButton.innerHTML = closeSvg
         chatButton.style.backgroundColor = '#ffffff'
+
+        // send access info
+        var title = document.title;
+        var href = window.location.href;
+        var platform = getPlatform();
+        var browser = getBrowser();
+
+        chatIframe.contentWindow.postMessage({type:'ACCESS_INFO', title, href, platform, browser}, '*');
       } else {
+        // close
+
         chatIframe.style.bottom = '80px'
         chatIframe.style.opacity = '0'
         setTimeout(() => {

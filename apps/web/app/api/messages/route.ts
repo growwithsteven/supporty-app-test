@@ -1,11 +1,13 @@
 import * as slackApi from "@/lib/slack-api";
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseWithServiceRole } from "@/lib/supabase";
 import { verifyTokenFromAuthorization } from "@/lib/token";
+import { AccessInfoEventData } from "@/app/(external)/chat/[project_uuid]/_hooks/useMessageEventListener";
 
-export async function POST(req) {
-  const { projectUuid, text, internalText, type } = await req.json();
+export async function POST(req: NextRequest) {
+  const { projectUuid, text, internalText, type, accessInfo } =
+    await req.json();
   const supabase = createSupabaseWithServiceRole();
   const { sub: userId } = await verifyTokenFromAuthorization(
     req.headers.get("Authorization"),
@@ -81,13 +83,17 @@ export async function POST(req) {
     }
   }
 
+  const isFirstMessage = threadTs == null;
+
+  const messageText = isFirstMessage
+    ? `*New conversation arrived!*\n🙋: "${message.text}"\n_Reply in the thread to send a message to the user._`
+    : (message.internal_text ?? message.text);
+
   // Send message to Slack
   const { data: postMessageData } = await slackApi.postMessage({
     accessToken: project.access_token,
     channel: project.channel_id,
-    text: threadTs
-      ? (message.internal_text ?? message.text)
-      : `New conversation from supporty: ${message.text}\nReply in the thread to send a message to the user.`,
+    text: messageText,
     ...(threadTs && { thread_ts: threadTs }),
   });
 
@@ -98,13 +104,62 @@ export async function POST(req) {
     );
   }
 
-  if (!threadTs) {
+  if (isFirstMessage) {
+    threadTs = postMessageData.message.ts;
+
+    if (accessInfo != null) {
+      try {
+        await slackApi.postMessage({
+          accessToken: project.access_token,
+          channel: project.channel_id,
+          text: getAccessInfoText(accessInfo),
+          thread_ts: threadTs,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     // Update chat with thread_ts
     await supabase
       .from("chats")
-      .update({ thread_ts: postMessageData.message.ts })
+      .update({
+        thread_ts: threadTs,
+        ...(accessInfo && { access_info: accessInfo }),
+      })
       .eq("id", chat.id);
   }
 
   return NextResponse.json(message);
+}
+
+function getAccessInfoText(accessInfo: AccessInfoEventData) {
+  const platformLabel = getPlatformLabel(accessInfo.platform);
+
+  return `Access Information`
+    .concat(`\n- URL: ${accessInfo.href}`)
+    .concat(`\n- Page Title: "${accessInfo.title}"`)
+    .concat(platformLabel != null ? `\n- OS: ${platformLabel}` : "")
+    .concat(`\n- Browser: ${accessInfo.browser}`);
+}
+
+function getPlatformLabel(platform: string | null) {
+  if (platform == null) {
+    return null;
+  }
+
+  switch (platform) {
+    case "iphone":
+      return "iPhone";
+    case "ipad":
+      return "iPad";
+    case "android":
+      return "Android";
+    case "mac":
+      return "Mac";
+    case "windows":
+      return "Windows";
+    default:
+      return null;
+  }
 }
