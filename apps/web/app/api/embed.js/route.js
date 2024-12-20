@@ -126,8 +126,9 @@ export async function GET(req) {
         var href = window.location.href;
         var platform = getPlatform();
         var browser = getBrowser();
+        var referrer = document.referrer;
 
-        chatIframe.contentWindow.postMessage({type:'ACCESS_INFO', title, href, platform, browser}, '*');
+        chatIframe.contentWindow.postMessage({type:'ACCESS_INFO', title, href, platform, browser, referrer}, '*');
       } else {
         // close
 

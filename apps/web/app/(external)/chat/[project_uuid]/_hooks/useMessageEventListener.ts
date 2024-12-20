@@ -35,6 +35,7 @@ const accessInfoEventDataSchema = z.object({
   href: z.string(),
   platform: z.string().nullable(),
   browser: z.string(),
+  referrer: z.string().nullable(),
 });
 export type AccessInfoEventData = z.infer<typeof accessInfoEventDataSchema>;
 

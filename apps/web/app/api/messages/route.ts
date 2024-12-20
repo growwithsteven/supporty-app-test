@@ -140,7 +140,10 @@ function getAccessInfoText(accessInfo: AccessInfoEventData) {
     .concat(`\n- URL: ${accessInfo.href}`)
     .concat(`\n- Page Title: "${accessInfo.title}"`)
     .concat(platformLabel != null ? `\n- OS: ${platformLabel}` : "")
-    .concat(`\n- Browser: ${accessInfo.browser}`);
+    .concat(`\n- Browser: ${accessInfo.browser}`)
+    .concat(
+      accessInfo.referrer != null ? `\n- Referrer: ${accessInfo.referrer}` : "",
+    );
 }
 
 function getPlatformLabel(platform: string | null) {
