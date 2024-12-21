@@ -21,11 +21,11 @@ export default function Home({ cta = <WaitlistButton /> }: Props) {
   const router = useRouter();
   const t = useTranslations("home");
 
-  // useEffect(() => {
-  //   if (authState) {
-  //     router.push("/dashboard");
-  //   }
-  // }, [authState]);
+  useEffect(() => {
+    if (authState) {
+      router.push("/dashboard");
+    }
+  }, [authState]);
 
   return (
     <>
@@ -50,8 +50,11 @@ export default function Home({ cta = <WaitlistButton /> }: Props) {
             <Section.Paragraph>
               {t("main.section3.paragraph")}
             </Section.Paragraph>
-            <Spacing size={20} />
-            <div className="py-6">{cta}</div>
+            <Spacing size={16} />
+            <Section.Paragraph2>
+              {t("main.section3.paragraph2")}
+            </Section.Paragraph2>
+            <div className="py-2">{cta}</div>
           </Section>
           <Section>
             <Section.Paragraph>
@@ -144,7 +147,7 @@ Section.Paragraph2 = function SectionParagraph2({
   return (
     <p
       className={cn(
-        "py-2 !leading-loose text-base md:text-lg text-gray-400 whitespace-pre",
+        "py-2 !leading-loose text-base md:text-lg text-gray-400 whitespace-pre text-opacity-75",
         className,
       )}
     >
