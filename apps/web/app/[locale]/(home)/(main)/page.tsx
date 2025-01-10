@@ -5,18 +5,15 @@ import { useProjectAuth } from "@/hooks/project-auth";
 import { cn } from "@/lib/cn";
 import { useIntersectionObserver } from "@/src/hooks/useIntersectionObserver";
 import Script from "next/script";
-import { WaitlistButton } from "@/src/components/WaitlistButton";
 import { Spacing } from "@/src/components/Spacing";
 import { useTranslations } from "next-intl";
 import { useRouter, Link } from "@/i18n/routing";
 import { LocaleSelect } from "@/src/components/LocaleSelect";
+import { StartButton } from "@/src/components/StartButton";
 
 const SUPPORTY_PROJECT_UUID = "d2fe216a-c300-4bd1-962a-eff11ecd2026";
 
-interface Props {
-  cta?: React.ReactNode;
-}
-export default function Home({ cta = <WaitlistButton /> }: Props) {
+export default function Home() {
   const { authState } = useProjectAuth();
   const router = useRouter();
   const t = useTranslations("home");
@@ -32,7 +29,7 @@ export default function Home({ cta = <WaitlistButton /> }: Props) {
       <Script
         src={`https://supporty.app/api/embed.js?p=${SUPPORTY_PROJECT_UUID}&anim=true`}
       />
-      <div className="flex flex-col items-center bg-white">
+      <div className="flex flex-col h-screen items-center bg-white">
         <header className="w-full flex justify-between items-center p-4">
           <Link href="/">
             <img
@@ -43,7 +40,7 @@ export default function Home({ cta = <WaitlistButton /> }: Props) {
           </Link>
           <LocaleSelect />
         </header>
-        <main className="flex flex-col items-center text-center text-gray-800 py-20">
+        <main className="h-full flex flex-col items-center text-center text-gray-800 py-20">
           <Section>
             <Section.Title>{t("main.section3.title")}</Section.Title>
             <Spacing size={8} />
@@ -54,25 +51,9 @@ export default function Home({ cta = <WaitlistButton /> }: Props) {
             <Section.Paragraph2>
               {t("main.section3.paragraph2")}
             </Section.Paragraph2>
-            <div className="py-2">{cta}</div>
-          </Section>
-          <Section>
-            <Section.Paragraph>
-              {t("main.section2.paragraph")}
-            </Section.Paragraph>
-            <Section.Title>{t("main.section2.title")}</Section.Title>
-          </Section>
-          <Section>
-            <Section.Paragraph>
-              {t("main.section4.paragraph")}
-            </Section.Paragraph>
-            <Spacing size={20} />
-            {cta}
-          </Section>
-          <Section>
-            <Section.Paragraph2>
-              {t("main.section5.paragraph")}
-            </Section.Paragraph2>
+            <div className="py-2">
+              <StartButton />
+            </div>
           </Section>
         </main>
       </div>
@@ -92,7 +73,7 @@ function Section({
   return (
     <section
       ref={elementRef}
-      className={`py-24 mb-12 flex flex-col items-center w-full transition-all duration-500 ${
+      className={`h-full py-24 mb-12 flex flex-col items-center w-full transition-all duration-500 ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
       }`}
     >
