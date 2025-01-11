@@ -7,7 +7,7 @@ import { useState } from "react";
 export default function Dashboard() {
   const { authState, project } = useProjectAuth();
   const [isCopied, setIsCopied] = useState(false);
-  const scriptUrl = `<script src="https://supporty.app/api/embed.js?p=${project?.uuid}&anim=true"></script>`;
+  const scriptUrl = `<script src="https://dashboard.supporty.app/api/embed.js?p=${project?.uuid}&anim=true"></script>`;
 
   const handleCopy = () => {
     copy(scriptUrl);
