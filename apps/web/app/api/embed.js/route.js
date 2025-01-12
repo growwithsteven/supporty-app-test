@@ -146,11 +146,6 @@ export async function GET(req) {
 
   // DOM 준비가 필요 없다면 바로 append
   render();
-
-  // DOM 준비가 필요하면 이벤트 리스너 추가
-  document.addEventListener('DOMContentLoaded', function() {
-    render();
-  })
 })()`,
     {
       headers: {
