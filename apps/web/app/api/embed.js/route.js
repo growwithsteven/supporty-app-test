@@ -3,7 +3,9 @@ export async function GET(req) {
   const isAnimated = req.nextUrl.searchParams.get("anim") === "true";
   const isTest = req.nextUrl.searchParams.get("test") === "true";
 
-  const baseUrl = isTest ? "http://localhost:3000" : "https://supporty.app";
+  const baseUrl = isTest
+    ? "http://localhost:3000"
+    : "https://dashboard.supporty.app";
   const chatUrl = `${baseUrl}/chat/${projectUuid}`;
 
   return new Response(
