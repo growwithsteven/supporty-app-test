@@ -25,29 +25,27 @@ export const viewport = {
   userScaleable: false,
 };
 
+import { cookies } from "next/headers";
+
 export default async function RootLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
-
-  // Ensure that the incoming `locale` is valid
-  if (!routing.locales.includes(locale as any)) {
-    notFound();
-  }
+  const cookieStore = await cookies();
+  const locale = cookieStore.get("NEXT_LOCALE")?.value || "en";
 
   // Providing all messages to the client
   // side is the easiest way to get started
-  const messages = await getMessages(); // Enable static rendering
-  setRequestLocale(locale);
+  const messages = await getMessages({ locale });
 
   return (
-    <html lang="en">
-      <body className={`${ibmFlexSans.className} bg-base-100`}>
-        <NextIntlClientProvider messages={messages}>
+    <html lang={locale} suppressHydrationWarning>
+      <body
+        className={`${ibmFlexSans.className} bg-base-100`}
+        suppressHydrationWarning
+      >
+        <NextIntlClientProvider messages={messages} locale={locale}>
           {children}
           <Toaster
             containerStyle={{ top: 30 }}
@@ -57,8 +55,4 @@ export default async function RootLayout({
       </body>
     </html>
   );
-}
-
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
 }

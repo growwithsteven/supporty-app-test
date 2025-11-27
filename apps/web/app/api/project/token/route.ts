@@ -2,6 +2,9 @@ import { createSupabaseWithServiceRole } from "@/lib/supabase";
 import { createToken } from "@/lib/token";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const supabase = createSupabaseWithServiceRole();

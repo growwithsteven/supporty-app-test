@@ -1,7 +1,7 @@
 "use client";
 
 import { useProjectAuth } from "@/hooks/project-auth";
-import { useRouter } from "@/i18n/routing";
+import { useRouter } from "next/navigation";
 
 export default function LogoutButton() {
   const router = useRouter();

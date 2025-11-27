@@ -4,10 +4,12 @@ import copy from "copy-to-clipboard";
 import { useProjectAuth } from "@/hooks/project-auth";
 import { useState } from "react";
 
+import { config } from "@/lib/config";
+
 export default function Dashboard() {
   const { authState, project } = useProjectAuth();
   const [isCopied, setIsCopied] = useState(false);
-  const scriptUrl = `<script async src="https://dashboard.supporty.app/api/embed.js?p=${project?.uuid}&anim=true"></script>`;
+  const scriptUrl = `<script async src="${config.appUrl}/api/embed.js?p=${project?.uuid}&anim=true"></script>`;
 
   const handleCopy = () => {
     copy(scriptUrl);

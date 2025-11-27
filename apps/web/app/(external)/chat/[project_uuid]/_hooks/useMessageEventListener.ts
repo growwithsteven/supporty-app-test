@@ -8,14 +8,16 @@ type Handlers = {
 export function useMessageEventListener(handlers: Handlers) {
   useEffect(() => {
     const handleEvent = (event: MessageEvent) => {
-      try {
-        const data = eventDataSchema.parse(event.data);
+      const result = eventDataSchema.safeParse(event.data);
 
-        if (data.type === eventTypeSchema.enum.ACCESS_INFO) {
-          handlers.accessInfo(data);
-        }
-      } catch (error) {
-        console.error(error);
+      if (!result.success) {
+        return;
+      }
+
+      const data = result.data;
+
+      if (data.type === eventTypeSchema.enum.ACCESS_INFO) {
+        handlers.accessInfo(data);
       }
     };
 

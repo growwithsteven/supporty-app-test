@@ -1,8 +1,11 @@
 import { createSupabaseWithServiceRole } from "@/lib/supabase";
 import { verifyTokenFromAuthorization } from "@/lib/token";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
-export async function POST(req: Request) {
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
+export async function POST(req: NextRequest) {
   const { projectUuid, text, type, payload } = await req.json();
   const supabase = createSupabaseWithServiceRole();
   const { sub: userId } = await verifyTokenFromAuthorization(

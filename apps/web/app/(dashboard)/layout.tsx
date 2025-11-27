@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import { usePathname, useRouter } from "@/i18n/routing";
+import { usePathname, useRouter } from "next/navigation";
 import { useProjectAuth } from "@/hooks/project-auth";
-import LogoutButton from "../_components/logout-button";
+import LogoutButton from "./_components/logout-button";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { authState } = useProjectAuth();

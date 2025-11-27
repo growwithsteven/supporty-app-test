@@ -1,10 +1,13 @@
 import * as slackApi from "@/lib/slack-api";
 
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { createSupabaseWithServiceRole } from "@/lib/supabase";
 import { createToken } from "@/lib/token";
 
-export async function POST(req: Request) {
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
+export async function POST(req: NextRequest) {
   const { code } = await req.json();
   const supabase = createSupabaseWithServiceRole();
 
@@ -13,6 +16,13 @@ export async function POST(req: Request) {
 
   if (oauthData.error) {
     return NextResponse.json({ error: oauthData.error }, { status: 401 });
+  }
+
+  if (!oauthData.incoming_webhook) {
+    return NextResponse.json(
+      { error: "Missing incoming_webhook" },
+      { status: 400 },
+    );
   }
 
   // Get project

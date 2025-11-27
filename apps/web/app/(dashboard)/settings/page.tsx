@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { updateProjectSettings } from "@/lib/project-api";
 import { useProjectAuth } from "@/hooks/project-auth";
 import { Faq, Project, ProjectSettings } from "@/types/project";
-import TimePicker from "@/app/[locale]/(home)/(app)/_components/TimePicker";
+import TimePicker from "../_components/TimePicker";
 import { xor } from "@/lib/xor";
 import { FaqSection } from "./_components/FaqSection";
 
@@ -36,9 +36,9 @@ export default function Settings() {
       settings?.welcomeMessage !== (project?.settings?.welcomeMessage ?? "") ||
       settings?.faq !== project?.settings?.faq ||
       settings?.opening_hours?.open !==
-        project?.settings?.opening_hours?.open ||
+      project?.settings?.opening_hours?.open ||
       settings?.opening_hours?.close !==
-        project?.settings?.opening_hours?.close ||
+      project?.settings?.opening_hours?.close ||
       JSON.stringify(faq) !== JSON.stringify(project?.settings?.faq)
     );
   }, [settings]);
@@ -82,7 +82,7 @@ export default function Settings() {
     await updateProjectSettings({
       welcomeMessage,
       opening_hours:
-        openTime && closeTime ? { open: openTime, close: closeTime } : null,
+        openTime && closeTime ? { open: openTime, close: closeTime } : undefined,
       faq,
     });
   };

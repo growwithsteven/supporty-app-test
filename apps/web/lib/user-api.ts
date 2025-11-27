@@ -1,25 +1,8 @@
-import axios from "axios";
-import { createSupabaseUser } from "@/lib/supabase";
+import { createApiClient } from "@/lib/api-client";
 import { ContactReqPayload, Message } from "@/types/message";
 import { AccessInfoEventData } from "@/app/(external)/chat/[project_uuid]/_hooks/useMessageEventListener";
 
-const client = axios.create({
-  baseURL: "/api",
-});
-
-client.interceptors.request.use(async (config) => {
-  const supabase = createSupabaseUser();
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (session) {
-    config.headers["Authorization"] = `Bearer ${session.access_token}`;
-  }
-
-  return config;
-});
+const client = createApiClient("user");
 
 type SendMessageParams = Pick<Message, "text" | "internalText" | "type"> & {
   projectUuid: string;

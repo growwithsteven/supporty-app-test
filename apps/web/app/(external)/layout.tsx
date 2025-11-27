@@ -26,8 +26,8 @@ export default function ExternalLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html>
-      <body className={`${ibmFlexSans.className} bg-base-100`}>{children}</body>
+    <html suppressHydrationWarning>
+      <body className={`${ibmFlexSans.className} bg-base-100`} suppressHydrationWarning>{children}</body>
     </html>
   );
 }

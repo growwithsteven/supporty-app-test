@@ -7,7 +7,8 @@ import { useIntersectionObserver } from "@/src/hooks/useIntersectionObserver";
 import Script from "next/script";
 import { Spacing } from "@/src/components/Spacing";
 import { useTranslations } from "next-intl";
-import { useRouter, Link } from "@/i18n/routing";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { LocaleSelect } from "@/src/components/LocaleSelect";
 import { StartButton } from "@/src/components/StartButton";
 
@@ -73,9 +74,8 @@ function Section({
   return (
     <section
       ref={elementRef}
-      className={`h-full py-24 mb-12 flex flex-col items-center w-full transition-all duration-500 ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
-      }`}
+      className={`h-full py-24 mb-12 flex flex-col items-center w-full transition-all duration-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
+        }`}
     >
       {children}
     </section>

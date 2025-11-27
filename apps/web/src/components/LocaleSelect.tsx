@@ -1,7 +1,8 @@
-import { Locale, routing, usePathname, useRouter } from "@/i18n/routing";
+import { Locale, routing } from "@/i18n/routing";
 import { useLocale } from "next-intl";
-import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
+import Cookies from "js-cookie";
 
 const LOCALE_LABELS = {
   en: "English",
@@ -11,21 +12,14 @@ const LOCALE_LABELS = {
 export function LocaleSelect() {
   const locale = useLocale();
   const router = useRouter();
-  const pathname = usePathname();
-  const params = useParams();
   const [, startTransition] = useTransition();
 
   const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const nextLocale = e.target.value as Locale;
 
+    Cookies.set("NEXT_LOCALE", nextLocale);
     startTransition(() => {
-      router.replace(
-        // @ts-expect-error -- TypeScript will validate that only known `params`
-        // are used in combination with a given `pathname`. Since the two will
-        // always match for the current route, we can skip runtime checks.
-        { pathname, params },
-        { locale: nextLocale },
-      );
+      router.refresh();
     });
   };
 
