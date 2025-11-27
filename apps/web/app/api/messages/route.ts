@@ -6,7 +6,6 @@ import { verifyTokenFromAuthorization } from "@/lib/token";
 import { AccessInfoEventData } from "@/app/(external)/chat/[project_uuid]/_hooks/useMessageEventListener";
 
 export const dynamic = 'force-dynamic'
-export const runtime = 'nodejs'
 
 export async function POST(req: NextRequest) {
   const { projectUuid, text, internalText, type, accessInfo } =

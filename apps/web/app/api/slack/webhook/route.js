@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server'
 import { createSupabaseWithServiceRole } from '@/lib/supabase'
 
 export const dynamic = 'force-dynamic'
-export const runtime = 'nodejs'
 
 export async function POST(req) {
   const { team_id: teamId, event, type, challenge } = await req.json()

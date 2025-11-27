@@ -1,7 +1,6 @@
 import { NextRequest } from "next/server";
 
 export const dynamic = 'force-dynamic'
-export const runtime = 'nodejs'
 
 export async function GET(req: NextRequest) {
   const projectUuid = req.nextUrl.searchParams.get("p");

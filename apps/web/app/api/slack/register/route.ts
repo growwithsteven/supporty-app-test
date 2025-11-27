@@ -5,7 +5,6 @@ import { createSupabaseWithServiceRole } from "@/lib/supabase";
 import { createToken } from "@/lib/token";
 
 export const dynamic = 'force-dynamic'
-export const runtime = 'nodejs'
 
 export async function POST(req: NextRequest) {
   const { code } = await req.json();

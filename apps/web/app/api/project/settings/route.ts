@@ -3,7 +3,6 @@ import { createSupabaseWithServiceRole } from '@/lib/supabase'
 import { verifyTokenFromAuthorization } from '@/lib/token'
 
 export const dynamic = 'force-dynamic'
-export const runtime = 'nodejs'
 
 export async function PUT(req: NextRequest) {
     const settings = await req.json()
